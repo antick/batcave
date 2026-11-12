@@ -1,4 +1,4 @@
-# Batcave
+# <picture><source media="(prefers-color-scheme: dark)" srcset="apps/web/public/batcave-logo-dark.svg"><img src="apps/web/public/batcave-logo-light.svg" alt="Bat logo" width="40" height="40" align="center"></picture> Batcave
 
 An Astro portfolio and blog template with a card-based layout, eight themes, and a playful look inside Bruce Wayne's double life.
 
