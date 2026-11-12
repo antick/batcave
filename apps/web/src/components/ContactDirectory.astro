@@ -1,0 +1,57 @@
+---
+import ContactGrid from './ContactGrid.astro';
+import ResourceCategorySection from './ResourceCategorySection.astro';
+import type { ContactGroup } from '../lib/contact';
+
+interface Props {
+  groups: ContactGroup[];
+}
+
+const { groups } = Astro.props;
+---
+
+<div class="contact-directory" data-contact-directory>
+  <div class="contact-tabs" role="tablist" aria-label="Contact profile groups">
+    {groups.map((group, index) => (
+      <button
+        type="button"
+        id={`contact-tab-${group.id}`}
+        class:list={['contact-tab', { active: index === 0 }]}
+        role="tab"
+        aria-selected={index === 0 ? 'true' : 'false'}
+        aria-controls={`contact-panel-${group.id}`}
+        tabindex={index === 0 ? 0 : -1}
+        data-contact-tab={group.id}
+      >
+        {group.title}
+      </button>
+    ))}
+  </div>
+
+  {groups.map((group, index) => (
+    <section
+      id={`contact-panel-${group.id}`}
+      class="contact-panel"
+      role="tabpanel"
+      aria-labelledby={`contact-tab-${group.id}`}
+      hidden={index !== 0}
+      data-contact-panel={group.id}
+    >
+      <ResourceCategorySection
+        id={`contact-group-${group.id}`}
+        title={group.title}
+        description={group.description}
+      >
+        <ContactGrid profiles={group.profiles} />
+      </ResourceCategorySection>
+    </section>
+  ))}
+</div>
+
+<script>
+import { initTabs } from '../lib/tabs';
+
+document.querySelectorAll('[data-contact-directory]').forEach((directory) => {
+  initTabs(directory, 'contact');
+});
+</script>

@@ -1,0 +1,178 @@
+---
+import type { ListArticleItem } from '../lib/listArticle';
+import {
+  getListFilterId,
+  getListItemId,
+  LIST_ARTICLE_COPY,
+  LIST_FILTER_ALL_ID,
+} from '../lib/listArticle';
+
+interface Props {
+  items: ListArticleItem[];
+  layout?: 'detailed' | 'compact';
+}
+
+const { items, layout = 'detailed' } = Astro.props;
+const filterOptions = [
+  ...new Set(
+    items
+      .map((item) => item.meta)
+      .filter((meta): meta is string => Boolean(meta)),
+  ),
+]
+  .sort((first, second) => first.localeCompare(second))
+  .map((label) => ({
+    id: getListFilterId(label),
+    label,
+    count: items.filter((item) => item.meta === label).length,
+  }));
+---
+
+<section class="curated-list-collection" data-curated-list>
+  {filterOptions.length > 0 && (
+    <nav
+      class="curated-list-filters"
+      aria-label={LIST_ARTICLE_COPY.filterLabel}
+    >
+      <div class="curated-list-filters-track" data-list-filter-track>
+        <button
+          type="button"
+          class="curated-list-filter active"
+          data-list-filter={LIST_FILTER_ALL_ID}
+          aria-pressed="true"
+        >
+          <span class="curated-list-filter-label">
+            {LIST_ARTICLE_COPY.allLabel}
+          </span>
+          <span class="curated-list-filter-count">{items.length}</span>
+        </button>
+        {filterOptions.map((filter) => (
+          <button
+            type="button"
+            class="curated-list-filter"
+            data-list-filter={filter.id}
+            aria-pressed="false"
+          >
+            <span class="curated-list-filter-label">{filter.label}</span>
+            <span class="curated-list-filter-count">{filter.count}</span>
+          </button>
+        ))}
+      </div>
+      <p
+        class="curated-list-filter-status"
+        data-list-filter-status
+        aria-live="polite"
+      >
+        {LIST_ARTICLE_COPY.showingAll.replace('{count}', String(items.length))}
+      </p>
+    </nav>
+  )}
+
+  <ol
+    class:list={['curated-list-items', `curated-list-items-${layout}`]}
+    data-list-items
+  >
+    {(() => {
+      let lastGroup: string | undefined;
+      let displayIndex = 0;
+      return items.map((item) => {
+        const showGroup = item.group && item.group !== lastGroup;
+        if (showGroup) {
+          lastGroup = item.group;
+        }
+        displayIndex++;
+        const number = displayIndex;
+        const filterValue = item.meta ? getListFilterId(item.meta) : undefined;
+
+        return (
+          <>
+            {showGroup && (
+              <li
+                class="curated-list-group-heading"
+                data-list-item-filter={filterValue}
+                aria-hidden={filterValue ? undefined : 'true'}
+              >
+                <span
+                  class="curated-list-item-number"
+                  aria-hidden="true"
+                ></span>
+                <div class="curated-list-group-heading-content">
+                  <h4>{item.group}</h4>
+                </div>
+              </li>
+            )}
+            <li
+              id={getListItemId(item.title)}
+              class="curated-list-item"
+              data-list-item-filter={filterValue}
+            >
+              <span class="curated-list-item-number" aria-hidden="true">
+                {String(number).padStart(2, '0')}
+              </span>
+              <div class="curated-list-item-copy">
+                <div class="curated-list-item-heading">
+                  <h3>{item.title}</h3>
+                  {item.meta && <span>{item.meta}</span>}
+                </div>
+                {item.description && <p>{item.description}</p>}
+              </div>
+            </li>
+          </>
+        );
+      });
+    })()}
+  </ol>
+</section>
+
+<script
+  is:inline
+  define:vars={{
+    allFilterId: LIST_FILTER_ALL_ID,
+    showingAll: LIST_ARTICLE_COPY.showingAll,
+    showingFiltered: LIST_ARTICLE_COPY.showingFiltered,
+  }}
+>
+document.querySelectorAll('[data-curated-list]').forEach((collection) => {
+  const buttons = collection.querySelectorAll('[data-list-filter]');
+  const items = collection.querySelectorAll('[data-list-item-filter]');
+  const realItems = collection.querySelectorAll('.curated-list-item');
+  const status = collection.querySelector('[data-list-filter-status]');
+  const track = collection.querySelector('[data-list-filter-track]');
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const activeFilter = button.getAttribute('data-list-filter');
+      let visibleCount = 0;
+
+      items.forEach((item) => {
+        const matches =
+          activeFilter === allFilterId ||
+          item.getAttribute('data-list-item-filter') === activeFilter;
+        item.toggleAttribute('hidden', !matches);
+      });
+
+      realItems.forEach((item) => {
+        if (!item.hasAttribute('hidden')) visibleCount += 1;
+      });
+
+      buttons.forEach((option) => {
+        const isActive = option === button;
+        option.classList.toggle('active', isActive);
+        option.setAttribute('aria-pressed', String(isActive));
+      });
+
+      if (status) {
+        const template =
+          activeFilter === allFilterId ? showingAll : showingFiltered;
+        status.textContent = template.replace('{count}', String(visibleCount));
+      }
+
+      if (track instanceof HTMLElement && button instanceof HTMLElement) {
+        const offset =
+          button.offsetLeft - (track.clientWidth - button.offsetWidth) / 2;
+        track.scrollTo({ left: Math.max(0, offset), behavior: 'auto' });
+      }
+    });
+  });
+});
+</script>

@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HubCard from '../components/HubCard.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import { SITE_NAME } from '../lib/constants';
+import { getSiteShelfCards, SHELF_PAGE_COPY } from '../lib/shelf';
+
+const cards = getSiteShelfCards();
+---
+
+<Layout
+  title={`${SHELF_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={SHELF_PAGE_COPY.searchDescription}
+>
+  <ResourcePage
+    activePage="shelf"
+    title={SHELF_PAGE_COPY.title}
+    subtitle={SHELF_PAGE_COPY.subtitle}
+    intro={SHELF_PAGE_COPY.intro}
+  >
+    <div class="hub-grid">
+      {cards.map((card) => (
+        <HubCard
+          href={card.href}
+          title={card.title}
+          description={card.description}
+          icon={card.icon}
+          countLabel={card.countLabel}
+        />
+      ))}
+    </div>
+  </ResourcePage>
+</Layout>

@@ -1,0 +1,127 @@
+@media (max-width: 768px) {
+  .deck-scene {
+    padding: 14px 14px 24px;
+  }
+
+  .page-card > .card-content {
+    padding-bottom: 28px;
+  }
+
+  .deck-nav {
+    position: sticky;
+    top: 10px;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    justify-content: space-between;
+    overflow: visible;
+  }
+
+  .deck-nav-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 10px);
+    bottom: auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 7px;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.82);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .deck-nav[data-open] .deck-nav-menu {
+    display: flex;
+  }
+
+  .mobile-menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 34px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-color);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-weight: 500;
+    opacity: 0.86;
+    transition:
+      background 0.18s ease,
+      opacity 0.18s ease,
+      color 0.5s ease;
+  }
+
+  .mobile-menu-toggle:hover,
+  .deck-nav[data-open] .mobile-menu-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 1;
+  }
+
+  .deck-nav-menu .deck-nav-btn {
+    width: 100%;
+    min-width: 0;
+    flex: none;
+    justify-content: flex-start;
+    padding: 11px 12px;
+  }
+
+  .deck-nav-item {
+    width: 100%;
+  }
+
+  .deck-nav-menu .deck-nav-btn span,
+  .mobile-menu-toggle span {
+    display: inline;
+  }
+
+  .theme-switcher-wrap.inline .color-switcher {
+    top: calc(100% + 8px);
+    bottom: auto;
+    animation: themePanelDown 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  html[data-theme^="light"] .deck-nav-menu {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  html[data-theme="light-parchment"] .deck-nav-menu {
+    background: rgba(239, 236, 225, 0.96);
+    border-color: rgba(196, 54, 27, 0.12);
+  }
+
+  html[data-theme^="light"] .mobile-menu-toggle:hover,
+  html[data-theme^="light"] .deck-nav[data-open] .mobile-menu-toggle {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .resource-page-card {
+    gap: 20px;
+  }
+
+  .resource-category-section {
+    scroll-margin-top: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .resource-card {
+    padding: 16px;
+  }
+
+  .deck-nav-btn span,
+  .mobile-menu-toggle span {
+    display: inline;
+  }
+}

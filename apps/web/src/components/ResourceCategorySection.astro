@@ -1,0 +1,23 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  description?: string;
+  count?: number;
+}
+
+const { id, title, description, count } = Astro.props;
+---
+
+<section id={id} class="resource-category-section">
+  <header class="resource-category-header">
+    <div class="resource-category-heading">
+      <h3>{title}</h3>
+      {typeof count === 'number' && (
+        <span class="resource-category-count">{count}</span>
+      )}
+    </div>
+    {description && <p>{description}</p>}
+  </header>
+  <slot />
+</section>

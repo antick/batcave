@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ArticleListingPage from '../../components/ArticleListingPage.astro';
+import BackLinkRecorder from '../../components/BackLinkRecorder.astro';
+import { getActiveBlogListingCategories } from '../../lib/navHelper';
+import {
+  filterPostsByBlogCategory,
+  filterVisibleContent,
+  sortContentByPriority,
+} from '../../lib/content';
+import { BLOG_PAGE_SIZE } from '../../lib/config';
+import { paginateItems } from '../../lib/pagination';
+import { getBlogCategoryPath } from '../../lib/articleRoutes';
+import { BLOG_BACK_STORAGE_KEY, SITE_NAME } from '../../lib/constants';
+
+export async function getStaticPaths() {
+  const listingCategories = await getActiveBlogListingCategories();
+  return listingCategories.map((category) => ({
+    params: { category: category.id },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+const posts = sortContentByPriority(
+  filterPostsByBlogCategory(
+    filterVisibleContent(await getCollection('blog')),
+    category.id,
+  ),
+);
+const page = paginateItems(posts, 1, BLOG_PAGE_SIZE);
+---
+
+<Layout
+  title={`${category.label} posts - ${SITE_NAME}`}
+  description={category.description}
+>
+  <BackLinkRecorder storageKey={BLOG_BACK_STORAGE_KEY} />
+  <ArticleListingPage
+    title={`${category.label} posts`}
+    description={category.description}
+    page={page}
+    basePath={getBlogCategoryPath(category)}
+    paginationLabel={`${category.label} posts pagination`}
+  />
+</Layout>

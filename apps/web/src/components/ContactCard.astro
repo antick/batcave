@@ -1,0 +1,29 @@
+---
+import type { ContactProfile } from '../lib/contact';
+
+interface Props {
+  profile: ContactProfile;
+}
+
+const { profile } = Astro.props;
+---
+
+<a
+  href={profile.url}
+  class="contact-card"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`Open ${profile.title} in a new tab`}
+>
+  <span class="contact-card-icon" aria-hidden="true">
+    <i class={profile.icon}></i>
+  </span>
+  <span class="contact-card-identity">
+    <strong>{profile.title}</strong>
+    <span>{profile.handle}</span>
+  </span>
+  <i
+    class="fa-solid fa-arrow-up-right-from-square contact-card-cue"
+    aria-hidden="true"
+  ></i>
+</a>

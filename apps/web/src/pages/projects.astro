@@ -1,0 +1,34 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Pagination from '../components/Pagination.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import BackLinkRecorder from '../components/BackLinkRecorder.astro';
+import { PROJECTS_PAGE_SIZE } from '../lib/config';
+import { paginateItems } from '../lib/pagination';
+import { getVisibleProjects, PROJECTS_PAGE_COPY } from '../lib/projects';
+import { PROJECTS_BACK_STORAGE_KEY, SITE_NAME } from '../lib/constants';
+
+const page = paginateItems(getVisibleProjects(), 1, PROJECTS_PAGE_SIZE);
+---
+
+<Layout
+  title={`Projects - ${SITE_NAME}`}
+  description={PROJECTS_PAGE_COPY.intro}
+>
+  <BackLinkRecorder storageKey={PROJECTS_BACK_STORAGE_KEY} />
+  <ResourcePage
+    activePage="projects"
+    title="Projects"
+    intro={PROJECTS_PAGE_COPY.intro}
+  >
+    <ProjectGrid projects={page.items} />
+
+    <Pagination
+      basePath="/projects"
+      currentPage={page.currentPage}
+      totalPages={page.totalPages}
+      label="Projects pagination"
+    />
+  </ResourcePage>
+</Layout>

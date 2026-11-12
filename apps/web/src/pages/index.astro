@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import CardDeck from '../components/CardDeck';
+import IdentityCard from '../components/cards/IdentityCard.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Layout from '../layouts/Layout.astro';
+import { BOOKS } from '../lib/books';
+import { HOME_PAGE_TITLE, SITE_DESCRIPTION } from '../lib/constants';
+import { filterVisibleContent } from '../lib/content';
+import {
+  buildHomeSitePulse,
+  getAllFeaturedPosts,
+  getHomePicks,
+  getRecentWriting,
+  toHomeWritingItem,
+} from '../lib/home';
+import { buildHomeNow } from '../lib/homeNow';
+import { getBlogCategorySummaries } from '../lib/blog';
+import { getActiveBlogCategories, getDynamicNavItems } from '../lib/navHelper';
+import {
+  getFeaturedOpenSourceProjects,
+  getOpenSourceSpotlight,
+} from '../lib/openSource';
+import { getVisibleProjects } from '../lib/projects';
+import { getSiteShelfCards } from '../lib/shelf';
+
+const posts = filterVisibleContent(await getCollection('blog'));
+const blogCategories = await getActiveBlogCategories();
+const blogCategorySummaries = getBlogCategorySummaries(
+  posts,
+  blogCategories,
+).slice(1);
+const siteNavItems = await getDynamicNavItems();
+const featuredWriting = getHomePicks(posts).map(toHomeWritingItem);
+const featuredPostCount = getAllFeaturedPosts(posts).length;
+const recentWriting = getRecentWriting(posts);
+const openSourceProjects = getFeaturedOpenSourceProjects();
+const shelfCards = getSiteShelfCards();
+const sitePulse = buildHomeSitePulse({
+  posts,
+  categories: blogCategories,
+  projectCount: getVisibleProjects().length,
+  openSourceCount: openSourceProjects.length,
+  shelfItemCount: shelfCards.reduce((total, card) => total + card.count, 0),
+});
+const nowItems = buildHomeNow({
+  spotlight: getOpenSourceSpotlight(openSourceProjects),
+  bookCount: BOOKS.length,
+  latestPost: recentWriting[0],
+});
+---
+
+<Layout title={HOME_PAGE_TITLE} description={SITE_DESCRIPTION}>
+  <CardDeck client:load siteNavItems={siteNavItems}>
+    <IdentityCard
+      blogCategorySummaries={blogCategorySummaries}
+      sitePulse={sitePulse}
+      nowItems={nowItems}
+      featuredWriting={featuredWriting}
+      featuredPostCount={featuredPostCount}
+      recentWriting={recentWriting}
+      postCount={posts.length}
+      shelfCards={shelfCards}
+    />
+  </CardDeck>
+  <SiteFooter />
+</Layout>

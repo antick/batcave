@@ -1,0 +1,55 @@
+@media (max-width: 900px) {
+  .home-section {
+    padding: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-section {
+    gap: 14px;
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 460px) {
+  .home-section-header .identity-block-divider {
+    display: none;
+  }
+
+  .home-section-header {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+  }
+}
+
+/* Skeleton Loader for GitHub Activity */
+.github-activity.skeleton .skeleton-text {
+  background: rgba(255, 255, 255, 0.06);
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.github-activity.skeleton .skeleton-cell {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.03);
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+html[data-theme^="light"] .github-activity.skeleton .skeleton-text {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+html[data-theme^="light"] .github-activity.skeleton .skeleton-cell {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.03);
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}

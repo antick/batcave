@@ -1,0 +1,13 @@
+---
+interface Props {
+  storageKey: string;
+}
+
+const { storageKey } = Astro.props;
+---
+
+<script is:inline define:vars={{ storageKey }}>
+try {
+  sessionStorage.setItem(storageKey, location.pathname + location.search);
+} catch {}
+</script>

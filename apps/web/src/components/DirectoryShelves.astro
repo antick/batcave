@@ -1,0 +1,48 @@
+---
+import {
+  DIRECTORY_ALL_CATEGORY_ID,
+  DIRECTORY_NAV_SHELVES,
+  DIRECTORY_PAGE_COPY,
+  getDirectoryCategoryPath,
+  getDirectoryShelf,
+} from '../lib/directory';
+import DirectoryGrid from './DirectoryGrid.astro';
+import ResourceCategorySection from './ResourceCategorySection.astro';
+import SubjectIndex from './SubjectIndex.astro';
+
+interface Props {
+  activeId?: string;
+}
+
+const { activeId = DIRECTORY_ALL_CATEGORY_ID } = Astro.props;
+const activeShelf = getDirectoryShelf(activeId);
+const isAll = activeId === DIRECTORY_ALL_CATEGORY_ID;
+---
+
+<div class="resource-shelves" data-shelf-active={activeId}>
+  <SubjectIndex
+    label={DIRECTORY_PAGE_COPY.subjectIndexLabel}
+    activeId={activeId}
+    items={DIRECTORY_NAV_SHELVES.map((shelf) => ({
+      id: shelf.id,
+      href: getDirectoryCategoryPath(shelf),
+      label: shelf.label,
+      icon: shelf.icon,
+      count: shelf.entries.length,
+    }))}
+  />
+
+  <div class="resource-shelf-list">
+    {activeShelf && isAll && <DirectoryGrid entries={activeShelf.entries} />}
+    {activeShelf && !isAll && (
+      <ResourceCategorySection
+        id={activeShelf.id}
+        title={activeShelf.label}
+        description={activeShelf.description}
+        count={activeShelf.entries.length}
+      >
+        <DirectoryGrid entries={activeShelf.entries} />
+      </ResourceCategorySection>
+    )}
+  </div>
+</div>

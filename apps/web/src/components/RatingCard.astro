@@ -1,0 +1,27 @@
+---
+import {
+  getRatingScoreLabel,
+  isRatingWatched,
+  type RatingEntry,
+} from '../lib/ratings';
+
+interface Props {
+  entry: RatingEntry;
+  showGenre?: boolean;
+}
+
+const { entry, showGenre = true } = Astro.props;
+const watched = isRatingWatched(entry);
+---
+
+<article
+  id={entry.id}
+  class:list={['rating-card', { 'rating-card-queued': !watched }]}
+>
+  <span class="rating-card-score">{getRatingScoreLabel(entry.rating)}</span>
+  <div class="rating-card-copy">
+    {showGenre && <span class="rating-card-genre">{entry.genre}</span>}
+    <h3>{entry.title}</h3>
+    {entry.review && <p>{entry.review}</p>}
+  </div>
+</article>

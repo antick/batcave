@@ -1,0 +1,74 @@
+---
+import {
+  OPEN_SOURCE_PAGE_COPY,
+  type OpenSourceProject,
+} from '../lib/openSource';
+import { getExternalLinkProps, toCategoryId } from '../lib/utils';
+
+interface Props {
+  project: OpenSourceProject;
+}
+
+const { project } = Astro.props;
+---
+
+<article
+  class="home-project-spotlight"
+  data-project-kind={toCategoryId(project.kind)}
+>
+  <div class="home-project-spotlight-main">
+    <span class="home-open-source-icon" aria-hidden="true">
+      <i class={project.icon}></i>
+    </span>
+    <div class="home-open-source-copy">
+      <div class="home-project-spotlight-heading">
+        <h3 class="home-open-source-title">{project.title}</h3>
+        <span class="home-project-badge">
+          {OPEN_SOURCE_PAGE_COPY.spotlightBadge}
+        </span>
+      </div>
+      <p class="home-open-source-description">{project.description}</p>
+      <span
+        class="home-open-source-tags"
+        role="group"
+        aria-label="Project details"
+      >
+        <span class="home-open-source-kind">{project.kind}</span>
+        {project.tags.map((tag) => (
+          <span class="home-open-source-tag">{tag}</span>
+        ))}
+      </span>
+    </div>
+  </div>
+
+  <div class="home-project-spotlight-actions">
+    {project.install && (
+      <code class="home-project-install">
+        <span aria-hidden="true">$</span>
+        {project.install}
+      </code>
+    )}
+    <div class="home-project-buttons">
+      {project.externalLink && (
+        <a
+          href={project.externalLink.href}
+          class="home-project-button home-project-button-primary"
+          aria-label={`${project.externalLink.label}: ${project.title}`}
+          {...getExternalLinkProps()}
+        >
+          <i class={project.externalLink.icon} aria-hidden="true"></i>
+          {OPEN_SOURCE_PAGE_COPY.websiteButton}
+        </a>
+      )}
+      <a
+        href={project.href}
+        class="home-project-button"
+        aria-label={`${OPEN_SOURCE_PAGE_COPY.repositoryAction}: ${project.title}`}
+        {...getExternalLinkProps()}
+      >
+        <i class="fa-brands fa-github" aria-hidden="true"></i>
+        {OPEN_SOURCE_PAGE_COPY.repositoryButton}
+      </a>
+    </div>
+  </div>
+</article>

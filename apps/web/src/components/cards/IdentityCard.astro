@@ -1,0 +1,52 @@
+---
+import type { BlogCategorySummary } from '../../lib/blog';
+import type { HomeSitePulse, HomeWritingItem } from '../../lib/home';
+import type { HomeNowItem } from '../../lib/homeNow';
+import type { ShelfCard } from '../../lib/shelf';
+import HomeActivity from '../HomeActivity.astro';
+import HomeHero from '../HomeHero.astro';
+import HomeOpenSource from '../HomeOpenSource.astro';
+import HomeShelf from '../HomeShelf.astro';
+import HomeTopics from '../HomeTopics.astro';
+import HomeWriting from '../HomeWriting.astro';
+
+interface Props {
+  blogCategorySummaries: BlogCategorySummary[];
+  sitePulse: HomeSitePulse;
+  nowItems: HomeNowItem[];
+  featuredWriting: HomeWritingItem[];
+  featuredPostCount: number;
+  recentWriting: HomeWritingItem[];
+  postCount: number;
+  shelfCards: ShelfCard[];
+}
+
+const {
+  blogCategorySummaries,
+  sitePulse,
+  nowItems,
+  featuredWriting,
+  featuredPostCount,
+  recentWriting,
+  postCount,
+  shelfCards,
+} = Astro.props;
+---
+
+<div class="card-content identity-card">
+  <HomeHero nowItems={nowItems} stats={sitePulse.stats} />
+  <HomeOpenSource />
+
+  <div class="home-section home-split">
+    <HomeWriting
+      featured={featuredWriting}
+      featuredCount={featuredPostCount}
+      recent={recentWriting}
+      postCount={postCount}
+    />
+    <HomeActivity pulse={sitePulse} />
+  </div>
+
+  <HomeTopics summaries={blogCategorySummaries} />
+  <HomeShelf cards={shelfCards} />
+</div>

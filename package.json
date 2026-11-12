@@ -1,0 +1,40 @@
+{
+  "name": "batcave",
+  "private": true,
+  "packageManager": "bun@1.4.4",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "preinstall": "node -e \"const ua=process.env.npm_config_user_agent||'';if(!/bun\\//.test(ua)){console.error('This repository uses Bun only. Run: bun install');process.exit(1)}\"",
+    "dev": "turbo run dev --filter=@batcave/web --",
+    "build": "turbo run build",
+    "preview": "turbo run preview --filter=@batcave/web --",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "validate:source": "bun run scripts/validate-source.ts",
+    "check": "turbo run check",
+    "test": "bun test",
+    "validate": "bun run scripts/validate-build.ts",
+    "artwork:projects": "bun run scripts/generate-project-artwork.ts",
+    "quality": "bun run format:check && bun run lint && bun run validate:source && bun run check && bun run test && bun run build && bun run validate"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.6",
+    "turbo": "2.11.10"
+  },
+  "trustedDependencies": [
+    "esbuild",
+    "sharp"
+  ],
+  "overrides": {
+    "@babel/core": "8.1.0",
+    "fast-uri": "4.2.3",
+    "js-yaml": "5.5.0",
+    "sharp": "0.35.5",
+    "svgo": "4.1.0"
+  }
+}

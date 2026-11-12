@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import BackLinkRecorder from '../components/BackLinkRecorder.astro';
+import PostGrid from '../components/PostGrid.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import Layout from '../layouts/Layout.astro';
+import { BLOG_INDEX_PATH } from '../lib/articleRoutes';
+import {
+  BLOG_BACK_STORAGE_KEY,
+  BLOG_PAGE_COPY,
+  SITE_NAME,
+} from '../lib/constants';
+import { filterVisibleContent } from '../lib/content';
+import { FEATURED_WRITING_PAGE_COPY, getAllFeaturedPosts } from '../lib/home';
+
+const posts = getAllFeaturedPosts(
+  filterVisibleContent(await getCollection('blog')),
+);
+---
+
+<Layout
+  title={`${FEATURED_WRITING_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={FEATURED_WRITING_PAGE_COPY.subtitle}
+>
+  <BackLinkRecorder storageKey={BLOG_BACK_STORAGE_KEY} />
+  <ResourcePage
+    activePage="blog"
+    title={FEATURED_WRITING_PAGE_COPY.title}
+    subtitle={FEATURED_WRITING_PAGE_COPY.subtitle}
+    className="blog-listing-card"
+    breadcrumb={{
+      href: BLOG_INDEX_PATH,
+      label: BLOG_PAGE_COPY.title,
+      type: FEATURED_WRITING_PAGE_COPY.title,
+    }}
+  >
+    {posts.length > 0 ? (
+      <PostGrid posts={posts} />
+    ) : (
+      <p>{FEATURED_WRITING_PAGE_COPY.empty}</p>
+    )}
+  </ResourcePage>
+</Layout>

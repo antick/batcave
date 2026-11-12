@@ -1,0 +1,54 @@
+---
+import { getPaginationLinks, getPagePath } from '../lib/pagination';
+
+interface Props {
+  basePath: string;
+  currentPage: number;
+  totalPages: number;
+  label: string;
+}
+
+const { basePath, currentPage, totalPages, label } = Astro.props;
+const links = getPaginationLinks(basePath, currentPage, totalPages);
+const hasPrevious = currentPage > 1;
+const hasNext = currentPage < totalPages;
+---
+
+{totalPages > 1 && (
+  <nav class="pagination" aria-label={label}>
+    <a
+      href={hasPrevious ? getPagePath(basePath, currentPage - 1) : undefined}
+      class:list={[
+        'pagination-link',
+        !hasPrevious && 'pagination-link-disabled',
+      ]}
+      aria-disabled={!hasPrevious ? 'true' : undefined}
+    >
+      Previous
+    </a>
+
+    <div class="pagination-pages">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            'pagination-link',
+            link.current && 'pagination-link-current',
+          ]}
+          aria-label={link.label}
+          aria-current={link.current ? 'page' : undefined}
+        >
+          {link.page}
+        </a>
+      ))}
+    </div>
+
+    <a
+      href={hasNext ? getPagePath(basePath, currentPage + 1) : undefined}
+      class:list={['pagination-link', !hasNext && 'pagination-link-disabled']}
+      aria-disabled={!hasNext ? 'true' : undefined}
+    >
+      Next
+    </a>
+  </nav>
+)}

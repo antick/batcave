@@ -1,0 +1,33 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ResourcePage from '../../components/ResourcePage.astro';
+import WishlistShelves from '../../components/WishlistShelves.astro';
+import { SITE_NAME } from '../../lib/constants';
+import {
+  ACTIVE_WISHLIST_CATEGORIES,
+  WISHLIST_PAGE_COPY,
+} from '../../lib/wishlist';
+
+export function getStaticPaths() {
+  return ACTIVE_WISHLIST_CATEGORIES.map((category) => ({
+    params: { category: category.id },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+---
+
+<Layout
+  title={`${category.label} ${WISHLIST_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={category.description}
+>
+  <ResourcePage
+    activePage="shelf"
+    title={WISHLIST_PAGE_COPY.title}
+    subtitle={WISHLIST_PAGE_COPY.subtitle}
+    className="wishlist-page"
+  >
+    <WishlistShelves activeId={category.id} />
+  </ResourcePage>
+</Layout>

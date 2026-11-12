@@ -1,0 +1,98 @@
+.tag-index {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tag-index-note {
+  margin: 0;
+  color: var(--text-color);
+  line-height: var(--font-line-height-ui);
+  opacity: 0.62;
+}
+
+.tag-index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14.5rem, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag-index-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  min-height: 3.15rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--text-color) 10%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--text-color) 5%, transparent);
+  color: var(--text-color);
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.tag-index-card::after {
+  display: none;
+}
+
+.tag-index-card:hover,
+.tag-index-card:focus-visible {
+  background: color-mix(in srgb, var(--accent-color) 10%, transparent);
+  border-color: color-mix(in srgb, var(--accent-color) 32%, transparent);
+  transform: translateY(-1px);
+}
+
+.tag-index-name {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 0.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.tag-index-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag-index-hash {
+  color: var(--accent-hover);
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.tag-index-count {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: baseline;
+  gap: 0.35rem;
+  color: var(--accent-hover);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.tag-index-count-label {
+  color: var(--text-color);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  opacity: 0.58;
+  text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .tag-index-grid {
+    grid-template-columns: 1fr;
+  }
+}

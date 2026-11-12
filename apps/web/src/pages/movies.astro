@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RatingShelves from '../components/RatingShelves.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import { SITE_NAME } from '../lib/constants';
+import { RATING_ALL_CATEGORY_ID } from '../lib/ratings';
+import {
+  getMovieCategoryPath,
+  MOVIE_NAV_SHELVES,
+  MOVIES_PAGE_COPY,
+} from '../lib/movies';
+---
+
+<Layout
+  title={`${MOVIES_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={MOVIES_PAGE_COPY.searchDescription}
+>
+  <ResourcePage
+    activePage="shelf"
+    title={MOVIES_PAGE_COPY.title}
+    subtitle={MOVIES_PAGE_COPY.subtitle}
+  >
+    <RatingShelves
+      copy={MOVIES_PAGE_COPY}
+      navShelves={MOVIE_NAV_SHELVES}
+      activeId={RATING_ALL_CATEGORY_ID}
+      getPath={getMovieCategoryPath}
+    />
+  </ResourcePage>
+</Layout>

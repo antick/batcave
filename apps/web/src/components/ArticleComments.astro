@@ -1,0 +1,111 @@
+---
+import {
+  ARTICLE_COMMENTS_COPY,
+  X_WIDGET_SCRIPT_ID,
+  X_WIDGET_SCRIPT_URL,
+  type ArticleDiscussion,
+} from '../lib/comments';
+
+interface Props {
+  discussion: ArticleDiscussion;
+}
+
+const { discussion } = Astro.props;
+---
+
+<section
+  class="article-comments"
+  aria-labelledby="article-comments-title"
+  data-article-comments
+  data-discussion-url={discussion.url}
+  data-widget-script-id={X_WIDGET_SCRIPT_ID}
+  data-widget-script-url={X_WIDGET_SCRIPT_URL}
+>
+  <div class="article-comments-intro">
+    <span class="resource-meta">Optional third-party content</span>
+    <h2 id="article-comments-title">{ARTICLE_COMMENTS_COPY.title}</h2>
+    <p>{ARTICLE_COMMENTS_COPY.description}</p>
+    <p class="article-comments-privacy">
+      {ARTICLE_COMMENTS_COPY.privacyNotice}
+    </p>
+  </div>
+
+  <div class="article-comments-actions">
+    <button type="button" class="resource-action-link" data-load-comments>
+      <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
+      {ARTICLE_COMMENTS_COPY.loadLabel}
+    </button>
+    <a href={discussion.url} target="_blank" rel="noopener noreferrer">
+      {ARTICLE_COMMENTS_COPY.openLabel}
+    </a>
+  </div>
+
+  <div class="article-comments-embed" data-comments-embed hidden></div>
+  <p class="article-comments-status" data-comments-status role="status" hidden>
+    {ARTICLE_COMMENTS_COPY.failure}
+  </p>
+</section>
+
+<script>
+const comments = document.querySelector('[data-article-comments]');
+const loadButton = comments?.querySelector('[data-load-comments]');
+const embed = comments?.querySelector('[data-comments-embed]');
+const status = comments?.querySelector('[data-comments-status]');
+const discussionUrl = comments?.getAttribute('data-discussion-url');
+const scriptId = comments?.getAttribute('data-widget-script-id');
+const scriptUrl = comments?.getAttribute('data-widget-script-url');
+const xWindow = window as typeof window & {
+  twttr?: { widgets?: { load: (element: HTMLElement) => Promise<void> } };
+};
+
+const showFailure = () => {
+  if (status instanceof HTMLElement) status.hidden = false;
+  if (loadButton instanceof HTMLButtonElement) loadButton.disabled = false;
+};
+
+const renderDiscussion = async () => {
+  if (!(embed instanceof HTMLElement) || !discussionUrl) return;
+  embed.hidden = false;
+  embed.innerHTML = `<blockquote class="twitter-tweet"><a href="${discussionUrl}"></a></blockquote>`;
+
+  try {
+    await xWindow.twttr?.widgets?.load(embed);
+  } catch {
+    showFailure();
+  }
+};
+
+loadButton?.addEventListener('click', () => {
+  if (!(loadButton instanceof HTMLButtonElement)) return;
+  loadButton.disabled = true;
+
+  if (xWindow.twttr?.widgets) {
+    void renderDiscussion();
+    return;
+  }
+
+  if (!scriptId || !scriptUrl) {
+    showFailure();
+    return;
+  }
+
+  const existingScript = document.getElementById(scriptId);
+  if (existingScript) {
+    existingScript.addEventListener('load', () => void renderDiscussion(), {
+      once: true,
+    });
+    existingScript.addEventListener('error', showFailure, { once: true });
+    return;
+  }
+
+  const script = document.createElement('script');
+  script.id = scriptId;
+  script.src = scriptUrl;
+  script.async = true;
+  script.addEventListener('load', () => void renderDiscussion(), {
+    once: true,
+  });
+  script.addEventListener('error', showFailure, { once: true });
+  document.head.append(script);
+});
+</script>

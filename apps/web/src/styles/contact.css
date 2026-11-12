@@ -1,0 +1,310 @@
+/* Contact directory, profile cards, and responsive group navigation. */
+
+.resource-page-card:has(.contact-directory),
+.resource-page-card:has(.contact-directory) > * {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.contact-priority {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 18px;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 22%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--accent-color) 8%, transparent);
+}
+
+.contact-cv-note {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 16px 18px;
+  border: 1px solid color-mix(in srgb, var(--text-color) 10%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--text-color) 4%, transparent);
+}
+
+.contact-cv-note h3 {
+  margin: 5px 0 0;
+  color: var(--text-color);
+  line-height: 1.35;
+}
+
+.contact-cv-note p {
+  margin: 6px 0 0;
+  color: var(--text-color);
+  opacity: 0.68;
+}
+
+.contact-priority-icon,
+.contact-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  color: var(--accent-hover);
+  background: color-mix(in srgb, var(--accent-color) 13%, transparent);
+}
+
+.contact-priority-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  font-size: 0.92rem;
+}
+
+.contact-priority-copy h3 {
+  margin: 5px 0 0;
+  color: var(--text-color);
+  line-height: 1.35;
+}
+
+.contact-priority-copy p {
+  max-width: var(--page-content-max-width);
+  margin: 7px 0 0;
+  color: var(--text-color);
+  opacity: 0.66;
+}
+
+.contact-priority-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contact-priority-actions a {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid color-mix(in srgb, var(--text-color) 10%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--text-color) 5%, transparent);
+  color: var(--text-color);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.contact-priority-actions a::after {
+  display: none;
+}
+
+.contact-priority-actions a:hover {
+  border-color: color-mix(in srgb, var(--text-color) 18%, transparent);
+  background: color-mix(in srgb, var(--text-color) 9%, transparent);
+  transform: translateY(-1px);
+}
+
+.contact-directory-count {
+  margin: -6px 0 0;
+  color: var(--text-color);
+  line-height: var(--font-line-height-ui);
+  opacity: 0.54;
+}
+
+.contact-directory-count strong {
+  color: var(--accent-hover);
+}
+
+.contact-directory {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.contact-tab {
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 1px solid color-mix(in srgb, var(--text-color) 9%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--text-color) 4%, transparent);
+  color: var(--text-color);
+  opacity: 0.68;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.contact-tab:hover {
+  border-color: color-mix(in srgb, var(--text-color) 17%, transparent);
+  background: color-mix(in srgb, var(--text-color) 8%, transparent);
+  opacity: 1;
+}
+
+.contact-tab.active {
+  border-color: color-mix(in srgb, var(--accent-color) 42%, transparent);
+  background: color-mix(in srgb, var(--accent-color) 14%, transparent);
+  color: var(--accent-hover);
+  opacity: 1;
+}
+
+.contact-tab:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.contact-panel[hidden] {
+  display: none;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.contact-card {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 58px;
+  padding: 9px 12px;
+  border: 1px solid color-mix(in srgb, var(--text-color) 9%, transparent);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--text-color) 4%, transparent);
+  color: var(--text-color);
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.contact-card::after {
+  display: none;
+}
+
+.contact-card:hover {
+  border-color: color-mix(in srgb, var(--text-color) 17%, transparent);
+  background: color-mix(in srgb, var(--text-color) 8%, transparent);
+  transform: translateY(-2px);
+}
+
+.contact-card-icon {
+  width: 32px;
+  height: 32px;
+  justify-self: start;
+  border-radius: 10px;
+}
+
+.contact-card-identity {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.contact-card-identity strong {
+  overflow: hidden;
+  color: var(--text-color);
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-card-identity span {
+  overflow: hidden;
+  color: var(--accent-hover);
+  line-height: var(--font-line-height-ui);
+  opacity: 0.68;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-card-cue {
+  color: var(--text-color);
+  opacity: 0.34;
+  transition:
+    color 0.18s ease,
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.contact-card:hover .contact-card-cue {
+  color: var(--accent-hover);
+  opacity: 0.86;
+  transform: translate(1px, -1px);
+}
+
+@media (max-width: 900px) {
+  .contact-priority {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .contact-priority-actions {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    padding-left: 58px;
+  }
+
+  .contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .resource-page-card:has(.contact-directory) {
+    overflow-x: clip;
+  }
+
+  .contact-priority {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px;
+  }
+
+  .contact-cv-note {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-priority-actions {
+    grid-column: auto;
+    flex-direction: column;
+    padding-left: 0;
+  }
+
+  .contact-tabs {
+    flex-wrap: nowrap;
+    max-width: 100%;
+    padding-bottom: 7px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-color: color-mix(in srgb, var(--accent-color) 45%, transparent)
+      transparent;
+    scrollbar-width: thin;
+  }
+
+  .contact-tab {
+    flex: 0 0 auto;
+  }
+
+  .contact-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-card {
+    padding: 9px 11px;
+  }
+}

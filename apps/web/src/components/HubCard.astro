@@ -1,0 +1,23 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  icon: string;
+  countLabel: string;
+}
+
+const { href, title, description, icon, countLabel } = Astro.props;
+---
+
+<a href={href} class="hub-card">
+  <div class="hub-card-heading">
+    <span class="hub-card-icon" aria-hidden="true">
+      <i class={icon}></i>
+    </span>
+    <h3 class="resource-title">{title}</h3>
+    <span class="hub-card-count">{countLabel}</span>
+  </div>
+
+  <p class="resource-description">{description}</p>
+</a>

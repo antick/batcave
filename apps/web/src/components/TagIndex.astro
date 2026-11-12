@@ -1,0 +1,41 @@
+---
+import { getTagPath, getTagPostsLabel, TAGS_PAGE_COPY } from '../lib/tags';
+import type { PostTag } from '../lib/tags';
+
+interface Props {
+  tags: PostTag[];
+}
+
+const { tags } = Astro.props;
+---
+
+{tags.length > 0 && (
+  <div class="tag-index">
+    <p class="tag-index-note">{TAGS_PAGE_COPY.sortedByFrequency}</p>
+    <ul class="tag-index-grid">
+      {tags.map((tag) => (
+        <li>
+          <a
+            href={getTagPath(tag)}
+            class="tag-index-card"
+            title={`${tag.label}, ${tag.count} ${getTagPostsLabel(tag.count)}`}
+            aria-label={`${tag.label}, ${tag.count} ${getTagPostsLabel(tag.count)}`}
+          >
+            <span class="tag-index-name">
+              <span class="tag-index-hash" aria-hidden="true">
+                #
+              </span>
+              <span class="tag-index-label">{tag.label}</span>
+            </span>
+            <span class="tag-index-count">
+              {tag.count}
+              <span class="tag-index-count-label">
+                {getTagPostsLabel(tag.count)}
+              </span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}

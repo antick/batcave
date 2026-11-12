@@ -1,0 +1,27 @@
+---
+import {
+  ARTICLE_DISCUSSION_COPY,
+  CONTACT_PREFERRED_PROFILES,
+} from '../lib/contact';
+---
+
+<aside class="article-discussion" aria-labelledby="article-discussion-title">
+  <div>
+    <h2 id="article-discussion-title">{ARTICLE_DISCUSSION_COPY.title}</h2>
+    <p>{ARTICLE_DISCUSSION_COPY.description}</p>
+  </div>
+
+  <div class="article-discussion-actions">
+    {CONTACT_PREFERRED_PROFILES.map((profile) => (
+      <a
+        href={profile.url}
+        class="resource-action-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <i class={profile.icon} aria-hidden="true" />
+        <span>Message on {profile.title}</span>
+      </a>
+    ))}
+  </div>
+</aside>

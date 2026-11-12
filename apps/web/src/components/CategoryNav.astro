@@ -1,0 +1,69 @@
+---
+interface CategoryLink {
+  id: string;
+  label: string;
+  icon?: string;
+}
+
+interface Props {
+  activeId: string;
+  basePath: string;
+  categories: CategoryLink[];
+  categoryBasePath?: string;
+  label?: string;
+  variant?: 'default' | 'scrollable';
+}
+
+const {
+  activeId,
+  basePath,
+  categories,
+  categoryBasePath = basePath,
+  label = 'Category navigation',
+  variant = 'default',
+} = Astro.props;
+
+function hrefForCategory(id: string) {
+  return id === 'all' ? basePath : `${categoryBasePath}/${id}`;
+}
+---
+
+<nav
+  class:list={[
+    'category-nav',
+    { 'category-nav-scrollable': variant === 'scrollable' },
+  ]}
+  aria-label={label}
+  data-category-tabs
+  data-scrollable-tabs={variant === 'scrollable' ? '' : undefined}
+>
+  {categories.map((category) => (
+    <a
+      href={hrefForCategory(category.id)}
+      data-category-tab={category.id}
+      class:list={['category-nav-link', { active: category.id === activeId }]}
+      aria-current={category.id === activeId ? 'true' : undefined}
+    >
+      {category.icon && (
+        <i
+          class:list={[category.icon, 'category-nav-icon']}
+          aria-hidden="true"
+        />
+      )}
+      {category.label}
+    </a>
+  ))}
+</nav>
+
+<script>
+document.querySelectorAll('[data-scrollable-tabs]').forEach((tabList) => {
+  const activeTab = tabList.querySelector('.category-nav-link.active');
+  if (!(activeTab instanceof HTMLElement)) return;
+
+  requestAnimationFrame(() => {
+    const centeredOffset =
+      activeTab.offsetLeft - (tabList.clientWidth - activeTab.offsetWidth) / 2;
+    tabList.scrollTo({ left: Math.max(0, centeredOffset), behavior: 'auto' });
+  });
+});
+</script>

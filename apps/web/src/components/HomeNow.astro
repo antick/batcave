@@ -1,0 +1,35 @@
+---
+import { getExternalLinkProps } from '../lib/utils';
+import { HOME_NOW_COPY, type HomeNowItem } from '../lib/homeNow';
+
+interface Props {
+  items: HomeNowItem[];
+}
+
+const { items } = Astro.props;
+---
+
+{items.length > 0 && (
+  <section class="home-now" aria-labelledby="home-now-title">
+    <h2 id="home-now-title" class="identity-block-label">
+      {HOME_NOW_COPY.label}
+    </h2>
+    <ul class="home-now-list">
+      {items.map((item) => (
+        <li class="home-now-item">
+          <i class={item.icon} aria-hidden="true"></i>
+          <span>
+            <span class="home-now-lead">{item.lead}</span>
+            <a
+              href={item.href}
+              class="home-now-link"
+              {...getExternalLinkProps(item.external)}
+            >
+              {item.text}
+            </a>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

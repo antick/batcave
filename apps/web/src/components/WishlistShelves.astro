@@ -1,0 +1,50 @@
+---
+import {
+  WISHLIST_ALL_CATEGORY_ID,
+  WISHLIST_NAV_SHELVES,
+  WISHLIST_PAGE_COPY,
+  getWishlistCategoryPath,
+  getWishlistShelf,
+} from '../lib/wishlist';
+import ResourceCategorySection from './ResourceCategorySection.astro';
+import SubjectIndex from './SubjectIndex.astro';
+import WishlistGrid from './WishlistGrid.astro';
+
+interface Props {
+  activeId?: string;
+}
+
+const { activeId = WISHLIST_ALL_CATEGORY_ID } = Astro.props;
+const activeShelf = getWishlistShelf(activeId);
+const isAll = activeId === WISHLIST_ALL_CATEGORY_ID;
+---
+
+<div class="resource-shelves" data-shelf-active={activeId}>
+  <SubjectIndex
+    label={WISHLIST_PAGE_COPY.subjectIndexLabel}
+    activeId={activeId}
+    items={WISHLIST_NAV_SHELVES.map((shelf) => ({
+      id: shelf.id,
+      href: getWishlistCategoryPath(shelf),
+      label: shelf.label,
+      icon: shelf.icon,
+      count: shelf.entries.length,
+    }))}
+  />
+
+  <div class="resource-shelf-list">
+    {activeShelf && isAll && (
+      <WishlistGrid entries={activeShelf.entries} showCategory />
+    )}
+    {activeShelf && !isAll && (
+      <ResourceCategorySection
+        id={activeShelf.id}
+        title={activeShelf.label}
+        description={activeShelf.description}
+        count={activeShelf.entries.length}
+      >
+        <WishlistGrid entries={activeShelf.entries} showCategory={false} />
+      </ResourceCategorySection>
+    )}
+  </div>
+</div>

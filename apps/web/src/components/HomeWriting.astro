@@ -1,0 +1,97 @@
+---
+import { FEATURED_WRITING_PATH, getBlogAllPath } from '../lib/articleRoutes';
+import {
+  FEATURED_WRITING_PAGE_COPY,
+  HOME_WRITING_COPY,
+  type HomeWritingItem,
+} from '../lib/home';
+import HomeSectionHeader from './HomeSectionHeader.astro';
+import HomeWritingLink from './HomeWritingLink.astro';
+
+interface Props {
+  featured: HomeWritingItem[];
+  featuredCount: number;
+  recent: HomeWritingItem[];
+  postCount: number;
+}
+
+const { featured, featuredCount, recent, postCount } = Astro.props;
+const panels = [
+  {
+    id: 'featured',
+    label: HOME_WRITING_COPY.featuredTab,
+    items: featured,
+    action: {
+      href: FEATURED_WRITING_PATH,
+      label: `${FEATURED_WRITING_PAGE_COPY.action} (${featuredCount})`,
+    },
+  },
+  {
+    id: 'recent',
+    label: HOME_WRITING_COPY.recentTab,
+    items: recent,
+    action: {
+      href: getBlogAllPath(),
+      label: `${HOME_WRITING_COPY.allPostsAction} (${postCount})`,
+    },
+  },
+];
+---
+
+<section
+  class="home-writing"
+  aria-labelledby="home-writing-title"
+  data-home-writing
+>
+  <HomeSectionHeader id="home-writing-title" label={HOME_WRITING_COPY.label} />
+
+  <div
+    class="home-tabs"
+    role="tablist"
+    aria-label={HOME_WRITING_COPY.tabsLabel}
+  >
+    {panels.map((panel, index) => (
+      <button
+        type="button"
+        id={`home-writing-tab-${panel.id}`}
+        class:list={['home-tab', { active: index === 0 }]}
+        role="tab"
+        aria-selected={index === 0 ? 'true' : 'false'}
+        aria-controls={`home-writing-panel-${panel.id}`}
+        tabindex={index === 0 ? 0 : -1}
+        data-home-writing-tab={panel.id}
+      >
+        {panel.label}
+      </button>
+    ))}
+  </div>
+
+  {panels.map((panel, index) => (
+    <div
+      id={`home-writing-panel-${panel.id}`}
+      class="home-writing-panel"
+      role="tabpanel"
+      aria-labelledby={`home-writing-tab-${panel.id}`}
+      hidden={index !== 0}
+      data-home-writing-panel={panel.id}
+    >
+      <div class="identity-writing-list">
+        {panel.items.map((item) => (
+          <HomeWritingLink item={item} />
+        ))}
+      </div>
+      <a href={panel.action.href} class="identity-inline-link">
+        {panel.action.label}
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
+  ))}
+</section>
+
+<script>
+import { initTabs } from '../lib/tabs';
+
+document.querySelectorAll('[data-home-writing]').forEach((section) => {
+  initTabs(section, 'home-writing');
+});
+</script>

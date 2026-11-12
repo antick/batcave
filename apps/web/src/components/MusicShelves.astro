@@ -1,0 +1,48 @@
+---
+import {
+  MUSIC_ALL_CATEGORY_ID,
+  MUSIC_NAV_SHELVES,
+  MUSIC_PAGE_COPY,
+  getMusicCategoryPath,
+  getMusicShelf,
+} from '../lib/music';
+import MusicGrid from './MusicGrid.astro';
+import ResourceCategorySection from './ResourceCategorySection.astro';
+import SubjectIndex from './SubjectIndex.astro';
+
+interface Props {
+  activeId?: string;
+}
+
+const { activeId = MUSIC_ALL_CATEGORY_ID } = Astro.props;
+const activeShelf = getMusicShelf(activeId);
+const isAll = activeId === MUSIC_ALL_CATEGORY_ID;
+---
+
+<div class="resource-shelves" data-shelf-active={activeId}>
+  <SubjectIndex
+    label={MUSIC_PAGE_COPY.subjectIndexLabel}
+    activeId={activeId}
+    items={MUSIC_NAV_SHELVES.map((shelf) => ({
+      id: shelf.id,
+      href: getMusicCategoryPath(shelf),
+      label: shelf.label,
+      icon: shelf.icon,
+      count: shelf.entries.length,
+    }))}
+  />
+
+  <div class="resource-shelf-list">
+    {activeShelf && isAll && <MusicGrid tracks={activeShelf.entries} />}
+    {activeShelf && !isAll && (
+      <ResourceCategorySection
+        id={activeShelf.id}
+        title={activeShelf.label}
+        description={activeShelf.description}
+        count={activeShelf.entries.length}
+      >
+        <MusicGrid tracks={activeShelf.entries} />
+      </ResourceCategorySection>
+    )}
+  </div>
+</div>

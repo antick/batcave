@@ -1,0 +1,86 @@
+---
+import { BAT_FLAP_DURATION_MS, HANGING_BATS } from '../lib/bats';
+import '../styles/hanging-bats.css';
+
+// Left-half artwork; the right half mirrors it around the 120-unit centre line.
+const sides = [
+  { name: 'left', mirror: undefined },
+  { name: 'right', mirror: 'translate(120 0) scale(-1 1)' },
+] as const;
+---
+
+<div
+  class="hanging-bats"
+  aria-hidden="true"
+  style={`--bat-flap-duration:${BAT_FLAP_DURATION_MS}ms`}
+>
+  {HANGING_BATS.map((bat) => (
+    <div class={`hanging-bat-gutter hanging-bat-gutter-${bat.side}`}>
+      <div
+        class="hanging-bat"
+        style={`--bat-size:${bat.size}px;--bat-drop:${bat.drop}px`}
+      >
+        <span class="hanging-bat-cord"></span>
+        <svg
+          viewBox="0 0 120 68"
+          class="hanging-bat-art"
+          data-hanging-bat
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path class="hanging-bat-cord-end" d="M60 0v3" />
+          {sides.map((side) => (
+            <g class={`hanging-bat-wing hanging-bat-wing-${side.name}`}>
+              <g transform={side.mirror}>
+                <path
+                  class="hanging-bat-membrane"
+                  d="M53 39.5C46 44 37 51 25 55L2.5 38Q13 31 10 19.5Q24 21 30 9.5Q42 20 55 15.5Z"
+                />
+                <path
+                  class="hanging-bat-bone"
+                  d="M53 39.5C46 44 37 51 25 55M25 55 4 38.6M25 55 10.6 21M25 55 29.8 11"
+                />
+                <path class="hanging-bat-claw" d="M25 55l-.6 3" />
+              </g>
+            </g>
+          ))}
+          <path
+            class="hanging-bat-claw"
+            d="M57.8 15 59 5.6q-1.6-1.4-.2-2.8M62.2 15 61 5.6q1.6-1.4.2-2.8"
+          />
+          <path
+            class="hanging-bat-fur"
+            d="M60 13.5c5.2 0 8.2 6.5 8.2 15.5S65.4 44.5 60 44.5 51.8 38 51.8 29 54.8 13.5 60 13.5Z"
+          />
+          {sides.map((side) => (
+            <g class="hanging-bat-fold" transform={side.mirror}>
+              <path
+                class="hanging-bat-membrane"
+                d="M60 14c-1.8 0-3.3.7-4.3 2.3-3.4 5.2-6.4 12-6.8 18.4-.4 6 4.4 10.3 11.1 10.3Z"
+              />
+              <path
+                class="hanging-bat-bone"
+                d="M55.5 16.8c-3 4.8-5.4 10.6-5.6 16.8"
+              />
+              <path class="hanging-bat-claw" d="M55.8 16.4l-1.7-2" />
+            </g>
+          ))}
+          <path
+            class="hanging-bat-fur"
+            d="M53.6 56.5 52 65.5l5-6.8M66.4 56.5 68 65.5l-5-6.8"
+          />
+          <ellipse class="hanging-bat-fur" cx="60" cy="51.5" rx="7.4" ry="7" />
+          <path class="hanging-bat-snout" d="M57.8 46.2q2.2 1.6 4.4 0" />
+          <path class="hanging-bat-eyes" d="M56.6 52.8h.1M63.3 52.8h.1" />
+        </svg>
+      </div>
+    </div>
+  ))}
+</div>
+
+<script>
+import { initBatMotion } from '../lib/batMotion';
+
+const container = document.querySelector<HTMLElement>('.hanging-bats');
+if (container) initBatMotion(container);
+</script>

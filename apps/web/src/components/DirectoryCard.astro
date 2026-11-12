@@ -1,0 +1,37 @@
+---
+import type { DirectoryEntry } from '../lib/types';
+import { getDirectoryHostname, getDirectoryIcon } from '../lib/directory';
+
+interface Props {
+  entry: DirectoryEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<a
+  href={entry.url}
+  class:list={[
+    'directory-card',
+    { 'directory-card-with-description': entry.description },
+  ]}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`Open ${entry.title} in a new tab`}
+>
+  <span class="directory-card-icon" aria-hidden="true">
+    <i class={getDirectoryIcon(entry.category)}></i>
+  </span>
+
+  <div class="directory-card-copy">
+    <span class="directory-card-category">{entry.category}</span>
+    <h3>{entry.title}</h3>
+    {entry.description && <p>{entry.description}</p>}
+    <span class="directory-card-host">{getDirectoryHostname(entry.url)}</span>
+  </div>
+
+  <i
+    class="fa-solid fa-arrow-up-right-from-square directory-card-external"
+    aria-hidden="true"
+  ></i>
+</a>

@@ -1,0 +1,15 @@
+/* Let homepage identity content define the deck height on larger screens. */
+
+@media (min-width: 769px) {
+  .deck-card {
+    position: relative;
+    height: auto;
+    min-height: 100%;
+  }
+
+  .card-content.identity-card {
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+}

@@ -1,0 +1,255 @@
+/* ── Theme Switcher (collapsed, opens on demand) ── */
+
+/* Standalone (blog pages): fixed bottom-left corner */
+.theme-switcher-wrap {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* ── Inline mode: embedded in the nav bar ── */
+.theme-switcher-wrap.inline {
+  /* Override all fixed-positioning: just a flex item in the nav */
+  position: relative;
+  bottom: auto;
+  left: auto;
+  right: auto;
+  align-items: center;
+  gap: 0;
+  flex-direction: column; /* button on top, panel below */
+  z-index: 30; /* above the page card */
+}
+
+.theme-switcher-wrap.inline .theme-toggle-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  opacity: 0.4;
+  color: var(--text-color);
+}
+
+.theme-switcher-wrap.inline .theme-toggle-btn:hover {
+  opacity: 0.75;
+  background: rgba(255, 255, 255, 0.08);
+  transform: none;
+}
+
+.theme-switcher-wrap.inline .theme-toggle-btn.open {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.12);
+  transform: none;
+  border-color: transparent;
+}
+
+html[data-theme^="light"] .theme-switcher-wrap.inline .theme-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+html[data-theme^="light"] .theme-switcher-wrap.inline .theme-toggle-btn.open {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+/* Panel opens DOWNWARD from the nav button */
+.theme-switcher-wrap.inline .color-switcher {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  animation: themePanelDown 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes themePanelDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Toggle button: always visible, small pill */
+.theme-toggle-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--text-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    color 0.5s ease;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.5);
+  transform: scale(1.1) rotate(15deg);
+}
+
+.theme-toggle-btn.open {
+  transform: scale(1.05) rotate(0deg);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+html[data-theme^="light"] .theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+html[data-theme^="light"] .theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Pop-up panel: appears above the toggle button */
+.color-switcher {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  background: rgba(12, 12, 12, 0.72);
+  padding: 12px 10px;
+  border-radius: 28px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  animation: themePanelIn 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes themePanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+html[data-theme^="light"] .color-switcher {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.color-switcher-label {
+  opacity: 0.4;
+  color: var(--text-color);
+  transition: color 0.5s ease;
+  line-height: 1;
+}
+
+.color-switcher-divider {
+  width: 18px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 1px;
+  margin: 2px 0;
+}
+
+html[data-theme^="light"] .color-switcher-divider {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.color-option {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  flex-shrink: 0;
+}
+
+html[data-theme^="light"] .color-option {
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+.color-option.active {
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.22);
+  transform: scale(1.1);
+}
+
+html[data-theme^="light"] .color-option.active {
+  border-color: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.color-option:hover {
+  transform: scale(1.2);
+}
+
+/* ── Media Queries ── */
+@media (max-width: 768px) {
+  .name {
+    padding: 1.5rem 2rem;
+    word-break: break-word;
+    white-space: normal;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+  }
+
+  .name span {
+    display: block;
+    text-align: center;
+  }
+
+  .name span:first-child {
+    margin-bottom: 10px;
+  }
+
+  .tagline {
+    margin-top: 0.5rem;
+  }
+
+  .inline-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .inline-list li {
+    margin: 10px 0;
+  }
+
+  /* On mobile: standalone version (blog pages) lifts above the fixed nav bar */
+  .theme-switcher-wrap:not(.inline) {
+    bottom: 86px;
+    left: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .name {
+    padding: 1.2rem 1.5rem;
+  }
+
+  .wrapper::before,
+  .wrapper::after {
+    display: none;
+  }
+}

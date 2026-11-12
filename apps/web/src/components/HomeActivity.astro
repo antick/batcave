@@ -1,0 +1,90 @@
+---
+import { HOME_ACTIVITY_COPY, type HomeSitePulse } from '../lib/home';
+import GitHubActivityHeatmap from './GitHubActivityHeatmap';
+import HomeSectionHeader from './HomeSectionHeader.astro';
+
+interface Props {
+  pulse: HomeSitePulse;
+}
+
+const { pulse } = Astro.props;
+const publishingSummary = pulse.publishing
+  .map((month) => `${month.label}: ${month.count}`)
+  .join(', ');
+const publishingInsights = [
+  {
+    label: HOME_ACTIVITY_COPY.outputLabel,
+    value: pulse.publishingInsights.postCount.toLocaleString('en-US'),
+  },
+  {
+    label: HOME_ACTIVITY_COPY.busiestMonthLabel,
+    value:
+      pulse.publishingInsights.busiestMonthLabel ??
+      HOME_ACTIVITY_COPY.quietMonthValue,
+  },
+  {
+    label: HOME_ACTIVITY_COPY.activeMonthsLabel,
+    value: pulse.publishingInsights.activeMonthCount.toLocaleString('en-US'),
+  },
+];
+---
+
+<section class="home-activity" aria-labelledby="home-activity-title">
+  <HomeSectionHeader
+    id="home-activity-title"
+    label={HOME_ACTIVITY_COPY.label}
+  />
+
+  <div class="home-pulse-panel">
+    <header class="home-pulse-panel-header">
+      <h3>{HOME_ACTIVITY_COPY.githubTitle}</h3>
+      <p>{HOME_ACTIVITY_COPY.githubDescription}</p>
+    </header>
+    <GitHubActivityHeatmap client:load />
+  </div>
+
+  <div class="home-pulse-panel">
+    <header class="home-pulse-panel-header">
+      <h3>{HOME_ACTIVITY_COPY.publishingTitle}</h3>
+      <p>{HOME_ACTIVITY_COPY.publishingDescription}</p>
+    </header>
+
+    <div
+      class="home-publishing-chart"
+      role="img"
+      aria-label={`Publishing activity. ${publishingSummary}`}
+    >
+      {pulse.publishing.map((month) => (
+        <div
+          class="home-publishing-month"
+          title={`${month.label}: ${month.count} posts`}
+          aria-hidden="true"
+        >
+          <span class="home-publishing-count">
+            {month.count > 0 ? month.count : ''}
+          </span>
+          <span
+            class="home-publishing-bar"
+            style={`--home-publishing-height: ${month.height}%`}
+            data-empty={month.count === 0 ? 'true' : undefined}
+          ></span>
+          <span
+            class="home-publishing-label"
+            data-compact-label={month.shortLabel.charAt(0)}
+          >
+            {month.shortLabel}
+          </span>
+        </div>
+      ))}
+    </div>
+
+    <dl class="home-publishing-insights">
+      {publishingInsights.map((insight) => (
+        <div class="home-publishing-insight">
+          <dt>{insight.label}</dt>
+          <dd>{insight.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

@@ -1,0 +1,230 @@
+---
+import Analytics from '@vercel/analytics/astro';
+import HangingBats from '../components/HangingBats.astro';
+import { ENABLE_ANALYTICS } from '../lib/config';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import '../styles/global.css';
+import '../styles/typography.css';
+import '../styles/theme-switcher.css';
+import '../styles/sections.css';
+import '../styles/article-base.css';
+import '../styles/deck-shell.css';
+import '../styles/identity-base.css';
+import '../styles/site-navigation.css';
+import '../styles/page-card.css';
+import '../styles/deck-responsive.css';
+import '../styles/home-deck.css';
+import '../styles/home.css';
+import '../styles/home-hero.css';
+import '../styles/home-projects.css';
+import '../styles/home-activity.css';
+import '../styles/home-shelf.css';
+import '../styles/home-responsive.css';
+import '../styles/portfolio.css';
+import '../styles/mobile-navigation.css';
+import '../styles/resource-extras.css';
+import '../styles/tabs.css';
+import '../styles/lists.css';
+import '../styles/subject-index.css';
+import '../styles/directory.css';
+import '../styles/wishlist.css';
+import '../styles/ratings.css';
+import '../styles/music.css';
+import '../styles/books.css';
+import '../styles/contact.css';
+import '../styles/about.css';
+import '../styles/page-glass.css';
+import '../styles/search.css';
+import '../styles/not-found.css';
+import '../styles/blog.css';
+import '../styles/tags.css';
+import '../styles/prompt-article.css';
+import '../styles/article-context.css';
+import '../styles/brand.css';
+import '../styles/related-content.css';
+import '../styles/motion.css';
+import {
+  DEFAULT_THEME,
+  LIGHT_THEME_PREFIX,
+  THEMES,
+  THEME_CSS_VARIABLES,
+  THEME_STORAGE_KEY,
+} from '../lib/themes';
+import { BRAND_LOGOS, SITE_FAVICON_ID } from '../lib/brand';
+import type { ContentSeoData } from '../lib/content';
+import { SITE_NAME, SITE_URL } from '../lib/constants';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  seo?: ContentSeoData;
+}
+
+const { title = SITE_NAME, description, noindex = false, seo } = Astro.props;
+const metaDescription = seo?.description ?? description;
+
+if (!metaDescription) {
+  throw new Error(
+    `Layout requires a meta description for ${Astro.url.pathname}`,
+  );
+}
+
+const canonicalUrl =
+  seo?.canonicalUrl ?? new URL(Astro.url.pathname, SITE_URL).toString();
+const robotsContent = seo
+  ? `${!seo.draft && seo.robots.index ? 'index' : 'noindex'}, ${!seo.draft && seo.robots.follow ? 'follow' : 'nofollow'}`
+  : `${noindex ? 'noindex' : 'index'}, ${noindex ? 'nofollow' : 'follow'}`;
+const themeBootstrapConfig = JSON.stringify({
+  defaultTheme: DEFAULT_THEME,
+  storageKey: THEME_STORAGE_KEY,
+  lightThemePrefix: LIGHT_THEME_PREFIX,
+  brandLogos: BRAND_LOGOS,
+  faviconId: SITE_FAVICON_ID,
+  cssVariables: THEME_CSS_VARIABLES,
+  themes: THEMES,
+}).replaceAll('<', '\\u003c');
+const themeBootstrapScript = `
+  (function () {
+    var config = ${themeBootstrapConfig};
+    var themeName = config.defaultTheme;
+    var stored = null;
+    try {
+      stored = localStorage.getItem(config.storageKey);
+    } catch (error) {}
+
+    if (stored && Object.hasOwn(config.themes, stored)) {
+      themeName = stored;
+    }
+
+    var colors = config.themes[themeName];
+    var root = document.documentElement;
+    root.dataset.theme = themeName;
+    Object.keys(config.cssVariables).forEach(function (colorKey) {
+      root.style.setProperty(config.cssVariables[colorKey], colors[colorKey]);
+    });
+    var favicon = document.getElementById(config.faviconId);
+    if (favicon) {
+      favicon.setAttribute('href', themeName.indexOf(config.lightThemePrefix) === 0
+        ? config.brandLogos.light
+        : config.brandLogos.dark);
+    }
+  })();
+`;
+const seoImageUrl = seo
+  ? new URL(seo.ogImage, seo.canonicalUrl).toString()
+  : undefined;
+const structuredData = seo
+  ? JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': seo.schemaType,
+      headline: seo.seoTitle,
+      description: seo.description,
+      image: seoImageUrl,
+      datePublished: seo.pubDate.toISOString(),
+      dateModified: seo.updatedDate.toISOString(),
+      inLanguage: seo.language,
+      mainEntityOfPage: seo.canonicalUrl,
+      author: {
+        '@type': 'Person',
+        name: seo.author,
+        url: new URL(seo.authorUrl, seo.canonicalUrl).toString(),
+      },
+    }).replaceAll('<', '\\u003c')
+  : undefined;
+---
+
+<!doctype html>
+<html lang={seo?.language ?? 'en'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style is:inline>
+    @media (min-width: 981px) {
+      .post-content-layout.toc-is-expanded {
+        grid-template-columns: minmax(0, 1fr) var(--post-toc-expanded-width);
+        gap: var(--post-toc-gap);
+      }
+
+      .post-toc.is-expanded {
+        width: var(--post-toc-expanded-width);
+        max-height: calc(
+          100dvh -
+          var(--post-toc-sticky-top) -
+          var(--post-toc-viewport-inset)
+        );
+        transform: none;
+      }
+
+      .post-toc:not(.is-expanded) {
+        width: var(--post-toc-collapsed-width);
+      }
+
+      .post-toc:not(.is-expanded) .post-toc-toggle {
+        display: flex;
+        width: var(--post-toc-collapsed-width);
+        height: var(--post-toc-collapsed-width);
+        min-width: var(--post-toc-collapsed-width);
+        min-height: var(--post-toc-collapsed-width);
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border-radius: 999px;
+      }
+
+      .post-toc:not(.is-expanded) .post-toc-title,
+      .post-toc:not(.is-expanded) .post-toc-count,
+      .post-toc:not(.is-expanded) .post-toc-chevron,
+      .post-toc-panel[hidden] {
+        display: none;
+      }
+    }
+    </style>
+
+    <link
+      id={SITE_FAVICON_ID}
+      rel="icon"
+      type="image/svg+xml"
+      href={BRAND_LOGOS.dark}
+    />
+    <title>{title}</title>
+    <meta name="description" content={metaDescription} />
+    <meta name="robots" content={robotsContent} />
+    <link rel="canonical" href={canonicalUrl} />
+    {seo && (
+      <>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={seo.seoTitle} />
+        <meta property="og:description" content={seo.description} />
+        <meta property="og:url" content={seo.canonicalUrl} />
+        <meta property="og:image" content={seoImageUrl} />
+        <meta property="og:image:alt" content={seo.ogImageAlt} />
+        <meta property="og:image:width" content={String(seo.ogImageWidth)} />
+        <meta property="og:image:height" content={String(seo.ogImageHeight)} />
+        <meta name="twitter:card" content={seo.socialCardType} />
+        <meta name="twitter:title" content={seo.seoTitle} />
+        <meta name="twitter:description" content={seo.description} />
+        <meta name="twitter:image" content={seoImageUrl} />
+        <meta name="twitter:image:alt" content={seo.ogImageAlt} />
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={structuredData}
+        />
+      </>
+    )}
+
+    <!--
+      Runs synchronously before first paint.
+      Reads the saved preference or uses the shared default theme and applies
+      the background + data-theme attribute to prevent any flash.
+    -->
+    <script is:inline set:html={themeBootstrapScript} />
+    {ENABLE_ANALYTICS && <Analytics />}
+  </head>
+  <body>
+    <HangingBats />
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,100 @@
+/* Movie and TV show rating cards and grid. */
+
+.resource-shelves:not([data-shelf-active="all"]) .rating-card-genre {
+  display: none;
+}
+
+.rating-collection,
+.rating-section {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rating-collection {
+  gap: 28px;
+}
+
+.rating-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+}
+
+.rating-card {
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr);
+  column-gap: 14px;
+  align-items: start;
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--text-color) 6%, transparent);
+  scroll-margin-top: 24px;
+}
+
+.rating-card-score {
+  display: inline-flex;
+  min-height: 2.4rem;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent-color) 16%, transparent);
+  color: var(--accent-hover);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.rating-card-queued .rating-card-score {
+  background: color-mix(in srgb, var(--text-color) 8%, transparent);
+  color: var(--text-color);
+  font-weight: 600;
+  opacity: 0.62;
+}
+
+.rating-card-queued {
+  border-style: dashed;
+  background: transparent;
+}
+
+.rating-card-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rating-card-genre {
+  color: var(--accent-hover);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+.rating-card h3 {
+  margin: 0;
+  color: var(--text-color);
+  line-height: 1.35;
+}
+
+.rating-card p {
+  margin: 0;
+  color: var(--text-color);
+  opacity: 0.66;
+}
+
+@media (max-width: 720px) {
+  .rating-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rating-card {
+    padding: 14px 15px;
+  }
+}

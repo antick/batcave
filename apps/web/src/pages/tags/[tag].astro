@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleListingPage from '../../components/ArticleListingPage.astro';
+import BackLinkRecorder from '../../components/BackLinkRecorder.astro';
+import Layout from '../../layouts/Layout.astro';
+import { BLOG_BACK_STORAGE_KEY, SITE_NAME } from '../../lib/constants';
+import { BLOG_PAGE_SIZE } from '../../lib/config';
+import { filterVisibleContent, sortContentByPriority } from '../../lib/content';
+import { paginateItems } from '../../lib/pagination';
+import {
+  filterPostsByTag,
+  getPostTag,
+  getTagListingDescription,
+  getTagListingTitle,
+  getTagPath,
+  getVisiblePostTags,
+  TAGS_PAGE_COPY,
+  TAGS_PATH,
+} from '../../lib/tags';
+
+export async function getStaticPaths() {
+  const posts = filterVisibleContent(await getCollection('blog'));
+  return getVisiblePostTags(posts).map((tag) => ({
+    params: { tag: tag.id },
+    props: { tagId: tag.id },
+  }));
+}
+
+const { tagId } = Astro.props;
+const visiblePosts = filterVisibleContent(await getCollection('blog'));
+const tag = getPostTag(getVisiblePostTags(visiblePosts), tagId);
+if (!tag) {
+  throw new Error(`Unknown tag listing "${tagId}".`);
+}
+const posts = sortContentByPriority(filterPostsByTag(visiblePosts, tagId));
+const page = paginateItems(posts, 1, BLOG_PAGE_SIZE);
+const description = getTagListingDescription(tag);
+---
+
+<Layout
+  title={`${getTagListingTitle(tag)} - ${SITE_NAME}`}
+  description={description}
+>
+  <BackLinkRecorder storageKey={BLOG_BACK_STORAGE_KEY} />
+  <ArticleListingPage
+    title={getTagListingTitle(tag)}
+    description={description}
+    page={page}
+    basePath={getTagPath(tag)}
+    paginationLabel={`${tag.label} posts pagination`}
+    backHref={TAGS_PATH}
+    backLabel={TAGS_PAGE_COPY.title}
+  />
+</Layout>

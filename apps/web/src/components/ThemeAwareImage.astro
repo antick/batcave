@@ -1,0 +1,28 @@
+---
+import type { ThemeImage } from '../lib/types';
+
+interface Props {
+  image: ThemeImage;
+  className?: string;
+  loading?: 'eager' | 'lazy';
+}
+
+const { image, className, loading = 'lazy' } = Astro.props;
+---
+
+<span class:list={['theme-aware-image', className]}>
+  <img
+    src={image.dark}
+    alt={image.alt}
+    class="theme-aware-image-source theme-aware-image-dark"
+    loading={loading}
+    decoding="async"
+  />
+  <img
+    src={image.light}
+    alt={image.alt}
+    class="theme-aware-image-source theme-aware-image-light"
+    loading={loading}
+    decoding="async"
+  />
+</span>

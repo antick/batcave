@@ -1,0 +1,79 @@
+---
+import {
+  getWishlistSourceLabel,
+  isWishlistItemCanceled,
+  isWishlistItemGot,
+  WISHLIST_PAGE_COPY,
+  type WishlistEntry,
+} from '../lib/wishlist';
+
+interface Props {
+  entry: WishlistEntry;
+  showCategory?: boolean;
+}
+
+const { entry, showCategory = true } = Astro.props;
+const got = isWishlistItemGot(entry);
+const canceled = isWishlistItemCanceled(entry);
+const stamp = got
+  ? WISHLIST_PAGE_COPY.gotLabel
+  : canceled
+    ? WISHLIST_PAGE_COPY.canceledLabel
+    : undefined;
+const markIcon = got
+  ? 'fa-solid fa-check'
+  : canceled
+    ? 'fa-solid fa-xmark'
+    : undefined;
+---
+
+<article
+  id={entry.id}
+  class:list={[
+    'wishlist-card',
+    { 'wishlist-card-got': got, 'wishlist-card-canceled': canceled },
+  ]}
+>
+  {stamp && markIcon && (
+    <>
+      <span class="wishlist-card-stamp" aria-hidden="true">
+        {stamp}
+      </span>
+      <span class="wishlist-card-mark" aria-hidden="true">
+        <i class={markIcon}></i>
+      </span>
+    </>
+  )}
+
+  <div class="wishlist-card-copy">
+    {showCategory && (
+      <div class="wishlist-card-meta">
+        <span class="wishlist-card-category">{entry.category}</span>
+      </div>
+    )}
+    <h3>{entry.title}</h3>
+    <p>{entry.why}</p>
+  </div>
+
+  {(entry.priceNote || entry.url) && (
+    <div class="wishlist-card-footer">
+      {entry.priceNote && (
+        <span class="wishlist-card-price">{entry.priceNote}</span>
+      )}
+      {entry.url && (
+        <a
+          href={entry.url}
+          class="wishlist-card-source"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>{getWishlistSourceLabel(entry.url)}</span>
+          <i
+            class="fa-solid fa-arrow-up-right-from-square"
+            aria-hidden="true"
+          ></i>
+        </a>
+      )}
+    </div>
+  )}
+</article>

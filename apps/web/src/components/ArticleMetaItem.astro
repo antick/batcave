@@ -1,0 +1,17 @@
+---
+import { formatDate } from '../lib/utils';
+
+interface Props {
+  label: string;
+  date: Date;
+}
+
+const { label, date } = Astro.props;
+---
+
+<span class="article-meta-item">
+  <span class="article-meta-label">{label}</span>
+  <time class="article-meta-value" datetime={date.toISOString()}
+    >{formatDate(date)}</time
+  >
+</span>

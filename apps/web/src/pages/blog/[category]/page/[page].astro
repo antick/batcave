@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../../layouts/Layout.astro';
+import ArticleListingPage from '../../../../components/ArticleListingPage.astro';
+import BackLinkRecorder from '../../../../components/BackLinkRecorder.astro';
+import { BLOG_PAGE_SIZE } from '../../../../lib/config';
+import {
+  filterPostsByBlogCategory,
+  filterVisibleContent,
+  sortContentByPriority,
+} from '../../../../lib/content';
+import { getActiveBlogListingCategories } from '../../../../lib/navHelper';
+import { paginateItems } from '../../../../lib/pagination';
+import { getBlogCategoryPath } from '../../../../lib/articleRoutes';
+import { BLOG_BACK_STORAGE_KEY, SITE_NAME } from '../../../../lib/constants';
+
+export async function getStaticPaths() {
+  const posts = sortContentByPriority(
+    filterVisibleContent(await getCollection('blog')),
+  );
+  const categories = await getActiveBlogListingCategories();
+
+  return categories.flatMap((category) => {
+    const categoryPosts = filterPostsByBlogCategory(posts, category.id);
+    const firstPage = paginateItems(categoryPosts, 1, BLOG_PAGE_SIZE);
+    return Array.from({ length: firstPage.totalPages - 1 }, (_, index) => ({
+      params: { category: category.id, page: String(index + 2) },
+      props: { category, pageNumber: index + 2 },
+    }));
+  });
+}
+
+const { category, pageNumber } = Astro.props;
+const posts = sortContentByPriority(
+  filterPostsByBlogCategory(
+    filterVisibleContent(await getCollection('blog')),
+    category.id,
+  ),
+);
+const page = paginateItems(posts, pageNumber, BLOG_PAGE_SIZE);
+---
+
+<Layout
+  title={`${category.label} posts - Page ${page.currentPage} - ${SITE_NAME}`}
+  description={`${category.description} Page ${page.currentPage}.`}
+>
+  <BackLinkRecorder storageKey={BLOG_BACK_STORAGE_KEY} />
+  <ArticleListingPage
+    title={`${category.label} posts`}
+    description={category.description}
+    page={page}
+    basePath={getBlogCategoryPath(category)}
+    paginationLabel={`${category.label} posts pagination`}
+  />
+</Layout>

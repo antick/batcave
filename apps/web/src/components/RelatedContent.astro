@@ -1,0 +1,36 @@
+---
+import ResourceCard from './ResourceCard.astro';
+import type { ThemeImage } from '../lib/types';
+
+interface RelatedItem {
+  title: string;
+  description: string;
+  href: string;
+  image: ThemeImage;
+  tags: string[];
+}
+
+interface Props {
+  title: string;
+  items: RelatedItem[];
+}
+
+const { title, items } = Astro.props;
+---
+
+{items.length > 0 && (
+  <aside class="related-content" aria-labelledby="related-content-title">
+    <h2 id="related-content-title">{title}</h2>
+    <div class="resource-grid">
+      {items.map((item) => (
+        <ResourceCard
+          title={item.title}
+          description={item.description}
+          href={item.href}
+          imageVariants={item.image}
+          tags={item.tags}
+        />
+      ))}
+    </div>
+  </aside>
+)}

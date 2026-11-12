@@ -1,0 +1,68 @@
+---
+import {
+  splitWishlistEntries,
+  WISHLIST_PAGE_COPY,
+  type WishlistEntry,
+} from '../lib/wishlist';
+import WishlistCard from './WishlistCard.astro';
+
+interface Props {
+  entries: WishlistEntry[];
+  showCategory?: boolean;
+}
+
+interface ArchiveSection {
+  id: string;
+  title: string;
+  description: string;
+  entries: WishlistEntry[];
+}
+
+const { entries, showCategory = true } = Astro.props;
+const { wanting, got, canceled } = splitWishlistEntries(entries);
+const archives: ArchiveSection[] = [
+  {
+    id: 'completed',
+    title: WISHLIST_PAGE_COPY.completedTitle,
+    description: WISHLIST_PAGE_COPY.completedDescription,
+    entries: got,
+  },
+  {
+    id: 'canceled',
+    title: WISHLIST_PAGE_COPY.canceledTitle,
+    description: WISHLIST_PAGE_COPY.canceledDescription,
+    entries: canceled,
+  },
+].filter((archive) => archive.entries.length > 0);
+---
+
+<div class="wishlist-collection">
+  {wanting.length > 0 && (
+    <div class="wishlist-grid">
+      {wanting.map((entry) => (
+        <WishlistCard entry={entry} showCategory={showCategory} />
+      ))}
+    </div>
+  )}
+
+  {archives.map((archive) => (
+    <section
+      class={`wishlist-archive wishlist-archive-${archive.id}`}
+      aria-labelledby={`wishlist-${archive.id}-title`}
+    >
+      <header class="resource-category-header">
+        <div class="resource-category-heading">
+          <h3 id={`wishlist-${archive.id}-title`}>{archive.title}</h3>
+          <span class="resource-category-count">{archive.entries.length}</span>
+        </div>
+        <p>{archive.description}</p>
+      </header>
+
+      <div class={`wishlist-grid wishlist-grid-${archive.id}`}>
+        {archive.entries.map((entry) => (
+          <WishlistCard entry={entry} showCategory={showCategory} />
+        ))}
+      </div>
+    </section>
+  ))}
+</div>

@@ -1,0 +1,129 @@
+/* Bookmarks cards, grid, and shelf-specific category hiding. */
+
+.resource-page-card:has(.directory-grid),
+.resource-page-card:has(.directory-grid) > * {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.resource-shelves:not([data-shelf-active="all"]) .directory-card-category {
+  display: none;
+}
+
+.directory-grid,
+.resource-shelves .directory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+}
+
+.directory-card {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 12px;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--text-color) 9%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--text-color) 4%, transparent);
+  color: var(--text-color);
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.directory-card::after {
+  display: none;
+}
+
+.directory-card:hover {
+  border-color: color-mix(in srgb, var(--text-color) 16%, transparent);
+  background: color-mix(in srgb, var(--text-color) 8%, transparent);
+  transform: translateY(-2px);
+}
+
+.directory-card-icon {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent-color) 13%, transparent);
+  color: var(--accent-hover);
+}
+
+.directory-card-external {
+  color: var(--accent-hover);
+  opacity: 0.48;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.directory-card:hover .directory-card-external {
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+
+.directory-card-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.directory-card-category {
+  color: var(--accent-hover);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  line-height: var(--font-line-height-ui);
+  opacity: 0.78;
+  text-transform: uppercase;
+}
+
+.directory-card h3 {
+  margin: 0;
+  color: var(--text-color);
+  line-height: 1.35;
+}
+
+.directory-card p {
+  margin: 5px 0 0;
+  color: var(--text-color);
+  opacity: 0.66;
+  overflow-wrap: anywhere;
+}
+
+.directory-card-host {
+  overflow: hidden;
+  margin-top: 5px;
+  color: var(--text-color);
+  line-height: var(--font-line-height-ui);
+  opacity: 0.48;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .directory-grid,
+  .resource-shelves .directory-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .directory-grid,
+  .resource-shelves .directory-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .directory-card {
+    padding: 11px 12px;
+  }
+}

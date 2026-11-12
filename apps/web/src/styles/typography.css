@@ -1,0 +1,360 @@
+@import "@fontsource/maple-mono/400.css";
+@import "@fontsource/maple-mono/400-italic.css";
+@import "@fontsource/maple-mono/500.css";
+@import "@fontsource/maple-mono/500-italic.css";
+@import "@fontsource/maple-mono/600.css";
+@import "@fontsource/maple-mono/700.css";
+@import "@fontsource/pacifico/latin-400.css";
+
+/* Single source for typography, loaded with the render-blocking site styles.
+   Rem units respect the reader's default text size. Mobile keeps the same
+   reading/control sizes; only page and identity headings scale with the viewport. */
+:root {
+  --font-body:
+    "Maple Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-display: "Pacifico", cursive;
+  --font-size-body: 0.875rem;
+  --font-size-home-copy: var(--font-size-body);
+  --font-size-ui: 0.75rem;
+  --font-size-meta: 0.6875rem;
+  --font-size-chip: var(--font-size-ui);
+  --font-size-card-title: 1rem;
+  --font-size-post-title: var(--font-size-card-title);
+  --font-size-section-title: 1.25rem;
+  --font-size-page-title: clamp(1.375rem, 1.125rem + 1vw, 1.875rem);
+  --font-size-display: clamp(2.5rem, 1.75rem + 2vw, 3.375rem);
+  --font-line-height-body: 1.65;
+  --font-line-height-ui: 1.5;
+  --font-line-height-heading: 1.3;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-synthesis-weight: none;
+  line-height: var(--font-line-height-body);
+}
+
+/* Inherit inline text so links, dates, and code match their surrounding copy.
+   Low-specificity defaults let the shared role assignments below set the size. */
+:where(a, small, time, code, pre, kbd, samp) {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+:where(button, input, textarea, select) {
+  font: inherit;
+}
+
+:where(button, summary) {
+  font-size: var(--font-size-ui);
+  line-height: var(--font-line-height-ui);
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+  font-weight: 700;
+  line-height: var(--font-line-height-heading);
+  overflow-wrap: anywhere;
+}
+
+:where(h1) {
+  font-size: var(--font-size-page-title);
+}
+
+:where(h2) {
+  font-size: var(--font-size-section-title);
+}
+
+:where(h3) {
+  font-size: var(--font-size-card-title);
+}
+
+:where(h4, h5, h6) {
+  font-size: var(--font-size-body);
+}
+
+.card-heading-title {
+  margin: 0 0 10px;
+  color: var(--text-color);
+  font-feature-settings:
+    "calt" 1,
+    "liga" 1;
+  font-size: var(--font-size-page-title);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  transition: color 0.5s ease;
+}
+
+.identity-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: normal;
+  font-kerning: normal;
+}
+
+:where(
+  .deck-nav-btn,
+  .deck-nav-link,
+  .mobile-menu-toggle,
+  .identity-block-label,
+  .identity-inline-link,
+  .post-toc-link,
+  .color-switcher-label
+) {
+  font-size: var(--font-size-ui);
+  line-height: var(--font-line-height-ui);
+}
+
+.identity-role {
+  font-size: var(--font-size-chip);
+  line-height: var(--font-line-height-ui);
+}
+
+.identity-card .identity-contact-msg {
+  opacity: 0.78;
+}
+
+/* Shared size assignments. Add visual peers to the same role here;
+   component styles own layout, color, and decoration. */
+
+/* Body copy */
+.tagline,
+.section-subtitle,
+.bio,
+.post-excerpt,
+.blog-listing-subtitle,
+.post-header-desc,
+.post-body,
+.post-body pre code,
+.card-subtitle,
+.identity-tagline,
+.resource-page-intro,
+.resource-description,
+.resource-empty,
+.project-detail-panel p,
+.project-detail-list,
+.about-hero-panel p.about-intro-p,
+p.about-story-p,
+.about-mini-card p,
+.about-bullet-list li,
+.site-search-input,
+.post-body .prompt-article-text pre code,
+.article-discussion p {
+  font-size: var(--font-size-body);
+}
+
+/* Controls and compact supporting text */
+.meta,
+.theme-switcher-wrap.inline .theme-toggle-btn,
+.theme-toggle-btn,
+.scroll-hint,
+.view-all-link,
+.contact-email-btn,
+.back-link,
+.post-header-date,
+.deck-card .view-all-link,
+.deck-card .contact-email-btn,
+.deck-nav-btn i,
+.home-pulse-stat i,
+.home-pulse-panel-header p,
+.home-now-lead,
+.home-chip,
+.home-tab,
+.home-project-button,
+.home-project-install,
+.home-shelf-card span,
+.home-shelf-books-action,
+.category-nav-link,
+.resource-category-header p,
+.resource-card-cue,
+.resource-action,
+.resource-card-compact .resource-description,
+.project-detail-nav a,
+.project-tech-stack-item,
+.pagination-link,
+.resource-action-link,
+.resource-breadcrumb,
+.breadcrumb-item,
+.category-nav-icon,
+.curated-list-filter,
+.subject-index a,
+.wishlist-card-mark,
+.books-note,
+.contact-directory-count,
+.contact-card-cue,
+.about-stack-value,
+.site-search-trigger i,
+.site-search-icon,
+.site-search-results-head,
+.site-search-result-desc,
+.site-search-empty,
+.post-toc-rail-icon,
+.post-toc-chevron,
+.post-toc-title,
+.tag-index-note,
+.copy-prompt-btn,
+.article-meta-details,
+.site-footer {
+  font-size: var(--font-size-ui);
+}
+
+/* Home section descriptions */
+.home-open-source-description,
+.home-now-link,
+.home-shelf-books-copy > span:not(.home-shelf-books-action) {
+  font-size: var(--font-size-home-copy);
+}
+
+/* Writing titles */
+.post-title,
+.site-search-result-title,
+.identity-writing-title {
+  font-size: var(--font-size-post-title);
+}
+
+/* Section headings */
+.section-heading,
+.post-body h2,
+.resource-category-header h3,
+.project-detail-panel h3,
+.project-tech-stack h3,
+.about-section h3,
+.related-content > h2 {
+  font-size: var(--font-size-section-title);
+}
+
+/* Chips and item metadata */
+.skill-tag,
+.post-date,
+.post-tag,
+.post-read-more,
+.deck-card .skill-tag,
+.deck-card .post-tag,
+.resource-meta,
+.hub-card-count,
+.curated-list-item-number,
+.curated-list-group-heading-content h4,
+.directory-card-external,
+.directory-card-category,
+.directory-card-host,
+.wishlist-card-stamp,
+.wishlist-card-category,
+.wishlist-card-price,
+.wishlist-card-source,
+.rating-card-score,
+.rating-card-genre,
+.music-card-source,
+.contact-priority-actions a,
+.contact-tab,
+.contact-card-identity span,
+.about-tool-chip,
+.site-search-result-meta,
+.prompt-article-label,
+.identity-writing-description {
+  font-size: var(--font-size-chip);
+}
+
+/* Page headings */
+.blog-listing-title,
+.post-header-title,
+.card-heading h2 {
+  font-size: var(--font-size-page-title);
+}
+
+/* Card titles and prominent data */
+.post-body h3,
+.identity-card .github-activity-stat strong,
+.home-open-source-title,
+.home-pulse-panel-header h3,
+.home-shelf-books-copy strong,
+.home-shelf-card strong,
+.home-pulse-stat strong,
+.home-publishing-insight dd,
+.resource-title,
+.resource-card-compact .resource-title,
+.curated-list-item-heading h3,
+.directory-card h3,
+.wishlist-card h3,
+.rating-card h3,
+.music-card h3,
+.book-cover-compact .book-cover-title strong,
+.contact-cv-note h3,
+.contact-priority-copy h3,
+.contact-card-identity strong,
+.about-mini-card h4,
+.about-setup-card h4,
+.article-discussion h2,
+.article-comments h2 {
+  font-size: var(--font-size-card-title);
+}
+
+/* Display */
+.name,
+.identity-name {
+  font-size: var(--font-size-display);
+}
+
+/* Dense data labels */
+.identity-card .github-activity-stat span,
+.identity-card .github-activity-weekdays,
+.identity-card .github-activity-legend,
+.identity-card .github-activity-unavailable,
+.home-open-source-kind,
+.home-open-source-tag,
+.home-open-source-kind-label,
+.home-project-badge,
+.home-chip-count,
+.home-pulse-stat span,
+.home-publishing-count,
+.home-publishing-label,
+.home-publishing-insight dt,
+.resource-category-count,
+.project-tech-stack-kicker,
+.project-tech-stack-count,
+.curated-list-filter-count,
+.subject-index i,
+.subject-index-count,
+.wishlist-card-source i,
+.book-cover-author,
+.book-cover-note,
+.book-cover-title span,
+.book-direction-label,
+.book-cover-compact .book-cover-author,
+.book-cover-compact .book-cover-title span,
+.about-stack-label,
+.about-tools-label,
+.post-toc-count,
+.tag-index-count-label,
+.article-meta-label {
+  font-size: var(--font-size-meta);
+}
+
+/* Compact chart labels */
+@media (max-width: 460px) {
+  .home-publishing-label::after {
+    font-size: var(--font-size-meta);
+  }
+}
+
+/* Writing lists share the same title and metadata rhythm. */
+.identity-writing-title,
+.post-title,
+.site-search-result-title {
+  font-weight: 700;
+  line-height: var(--font-line-height-heading);
+}
+
+.identity-writing-description,
+.post-date,
+.site-search-result-meta {
+  line-height: var(--font-line-height-ui);
+}
+
+.home-open-source-description,
+.home-pulse-panel-header p {
+  line-height: var(--font-line-height-body);
+}

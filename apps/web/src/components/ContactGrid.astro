@@ -1,0 +1,14 @@
+---
+import ContactCard from './ContactCard.astro';
+import type { ContactProfile } from '../lib/contact';
+
+interface Props {
+  profiles: ContactProfile[];
+}
+
+const { profiles } = Astro.props;
+---
+
+<div class="contact-grid">
+  {profiles.map((profile) => <ContactCard profile={profile} />)}
+</div>

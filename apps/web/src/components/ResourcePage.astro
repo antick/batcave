@@ -1,0 +1,79 @@
+---
+import SiteNav from './SiteNav';
+import SiteFooter from './SiteFooter.astro';
+import BackLinkRestore from './BackLinkRestore.astro';
+import type { ActivePage } from '../lib/navigation';
+import { getDynamicNavItems } from '../lib/navHelper';
+
+interface Props {
+  activePage?: ActivePage;
+  title: string;
+  subtitle?: string;
+  intro?: string;
+  className?: string;
+  breadcrumb?: {
+    href: string;
+    label: string;
+    type: string;
+    subHref?: string;
+    subLabel?: string;
+    backStorageKey?: string;
+  };
+}
+
+const { activePage, title, subtitle, intro, className, breadcrumb } =
+  Astro.props;
+const siteNavItems = await getDynamicNavItems();
+---
+
+<div class="deck-scene">
+  <SiteNav client:load activePage={activePage} siteNavItems={siteNavItems} />
+
+  <main class="deck-wrapper">
+    <div class="page-card-stack">
+      <div class="page-card">
+        <div class:list={['card-content', 'resource-page-card', className]}>
+          <div class="resource-page-header">
+            {breadcrumb && (
+              <nav class="resource-breadcrumb" aria-label="Breadcrumb">
+                <a
+                  href={breadcrumb.href}
+                  class="breadcrumb-back"
+                  data-back-key={breadcrumb.backStorageKey || undefined}
+                >
+                  <i class="fa-solid fa-chevron-left" aria-hidden="true" />
+                  <span>Back to {breadcrumb.label}</span>
+                </a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-item">{breadcrumb.type}</span>
+                {breadcrumb.subHref && breadcrumb.subLabel && (
+                  <>
+                    <span class="breadcrumb-separator">/</span>
+                    <a href={breadcrumb.subHref} class="breadcrumb-link">
+                      {breadcrumb.subLabel}
+                    </a>
+                  </>
+                )}
+              </nav>
+            )}
+            {breadcrumb?.backStorageKey && (
+              <BackLinkRestore
+                storageKey={breadcrumb.backStorageKey}
+                fallback={breadcrumb.href}
+              />
+            )}
+            <div class="card-heading">
+              <h1 class="card-heading-title">{title}</h1>
+              <div class="card-accent-line"></div>
+            </div>
+            {subtitle && <p class="card-subtitle">{subtitle}</p>}
+            {intro && <p class="resource-page-intro" set:html={intro} />}
+          </div>
+
+          <slot />
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<SiteFooter />

@@ -1,0 +1,74 @@
+---
+interface Props {
+  body: string;
+  prompt: {
+    useCase: string;
+    details: string[];
+  };
+}
+
+const { body, prompt } = Astro.props;
+---
+
+<div class="prompt-article">
+  <section class="prompt-article-guide" aria-labelledby="prompt-use-heading">
+    <div>
+      <span class="prompt-article-label">Use case</span>
+      <h2 id="prompt-use-heading">{prompt.useCase}</h2>
+    </div>
+    {prompt.details.length > 0 && (
+      <ul>
+        {prompt.details.map((detail) => (
+          <li>{detail}</li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <section class="prompt-article-text" aria-labelledby="prompt-text-heading">
+    <div class="prompt-article-header">
+      <h2 id="prompt-text-heading">Prompt</h2>
+      <button
+        type="button"
+        class="copy-prompt-btn"
+        aria-label="Copy prompt to clipboard"
+      >
+        <i class="fa-regular fa-copy" aria-hidden="true"></i>
+        <span>Copy</span>
+      </button>
+    </div>
+    <pre><code>{body.trim()}</code></pre>
+  </section>
+</div>
+
+<script>
+document.querySelectorAll('.prompt-article').forEach((container) => {
+  const copyBtn = container.querySelector('.copy-prompt-btn');
+  const codeElement = container.querySelector('.prompt-article-text pre code');
+
+  if (copyBtn && codeElement) {
+    copyBtn.addEventListener('click', async () => {
+      try {
+        const textToCopy = codeElement.textContent || '';
+        await navigator.clipboard.writeText(textToCopy);
+
+        const icon = copyBtn.querySelector('i');
+        const span = copyBtn.querySelector('span');
+        if (icon && span) {
+          icon.className = 'fa-solid fa-check';
+          span.textContent = 'Copied!';
+          copyBtn.classList.add('copied');
+
+          setTimeout(() => {
+            icon.className = 'fa-regular fa-copy';
+            span.textContent = 'Copy';
+            copyBtn.classList.remove('copied');
+          }, 2000);
+        }
+      } catch (err) {
+        console.error('Failed to copy text: ', err);
+      }
+    });
+  }
+});
+</script>

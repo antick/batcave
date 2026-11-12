@@ -1,0 +1,26 @@
+---
+interface Props {
+  stack: string[];
+}
+
+const { stack } = Astro.props;
+---
+
+<section class="project-tech-stack" aria-labelledby="project-tech-stack-title">
+  <div class="project-tech-stack-header">
+    <div>
+      <span class="project-tech-stack-kicker">Implementation</span>
+      <h3 id="project-tech-stack-title">Tech stack</h3>
+    </div>
+    <span class="project-tech-stack-count">{stack.length} technologies</span>
+  </div>
+
+  <div class="project-tech-stack-grid">
+    {stack.map((technology) => (
+      <span class="project-tech-stack-item">
+        <span class="project-tech-stack-dot" aria-hidden="true" />
+        {technology}
+      </span>
+    ))}
+  </div>
+</section>

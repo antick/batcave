@@ -1,0 +1,21 @@
+---
+import { ARTICLE_META_COPY } from '../lib/constants';
+import ArticleMetaItem from './ArticleMetaItem.astro';
+
+interface Props {
+  publishedDate: Date;
+  updatedDate: Date;
+  readingMinutes: number;
+}
+
+const { publishedDate, updatedDate, readingMinutes } = Astro.props;
+---
+
+<div class="article-meta-details" role="group" aria-label="Post details">
+  <ArticleMetaItem label={ARTICLE_META_COPY.published} date={publishedDate} />
+  <ArticleMetaItem label={ARTICLE_META_COPY.updated} date={updatedDate} />
+  <span class="article-meta-read">
+    <i class={ARTICLE_META_COPY.readingTimeIcon} aria-hidden="true"></i>
+    <span>{readingMinutes} {ARTICLE_META_COPY.readingTime}</span>
+  </span>
+</div>

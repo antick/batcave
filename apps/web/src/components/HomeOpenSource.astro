@@ -1,0 +1,142 @@
+---
+import { GITHUB_PROFILE_URL } from '../lib/constants';
+import {
+  getFeaturedOpenSourceProjects,
+  getOpenSourceKinds,
+  getOpenSourceSpotlight,
+  OPEN_SOURCE_PAGE_COPY,
+} from '../lib/openSource';
+import { getExternalLinkProps, toCategoryId } from '../lib/utils';
+import HomeProjectSpotlight from './HomeProjectSpotlight.astro';
+import HomeSectionHeader from './HomeSectionHeader.astro';
+
+const projects = getFeaturedOpenSourceProjects();
+const spotlight = getOpenSourceSpotlight(projects);
+const tiles = projects.filter((project) => project !== spotlight);
+const kinds = getOpenSourceKinds(projects);
+const filters = [
+  { id: 'all', label: OPEN_SOURCE_PAGE_COPY.allFilter, count: projects.length },
+  ...kinds,
+];
+---
+
+<section
+  class="home-section home-open-source"
+  aria-labelledby="home-open-source-title"
+  data-project-filter
+>
+  <HomeSectionHeader
+    id="home-open-source-title"
+    label={OPEN_SOURCE_PAGE_COPY.label}
+    action={{
+      href: GITHUB_PROFILE_URL,
+      label: OPEN_SOURCE_PAGE_COPY.action,
+      external: true,
+    }}
+  />
+
+  {kinds.length > 1 && (
+    <div
+      class="home-chip-row"
+      role="group"
+      aria-label={OPEN_SOURCE_PAGE_COPY.filterLabel}
+    >
+      {filters.map((filter, index) => (
+        <button
+          type="button"
+          class="home-chip"
+          aria-pressed={index === 0 ? 'true' : 'false'}
+          data-project-filter-value={filter.id}
+        >
+          {filter.label}
+          <span class="home-chip-count">{filter.count}</span>
+        </button>
+      ))}
+    </div>
+  )}
+
+  {spotlight && <HomeProjectSpotlight project={spotlight} />}
+
+  <div class="home-open-source-list">
+    {tiles.map((project) => (
+      <article
+        class="home-open-source-card"
+        data-project-kind={toCategoryId(project.kind)}
+      >
+        <div class="home-open-source-heading">
+          <span class="home-open-source-icon" aria-hidden="true">
+            <i class={project.icon}></i>
+          </span>
+          <span class="home-open-source-name">
+            <h3 class="home-open-source-title">{project.title}</h3>
+            <span class="home-open-source-kind-label">{project.kind}</span>
+          </span>
+        </div>
+        <p class="home-open-source-description" title={project.description}>
+          {project.description}
+        </p>
+        <div class="home-open-source-footer">
+          <span
+            class="home-open-source-tags"
+            role="group"
+            aria-label="Technologies"
+          >
+            {project.tags.map((tag) => (
+              <span class="home-open-source-tag">{tag}</span>
+            ))}
+          </span>
+          <span
+            class="home-open-source-links"
+            role="group"
+            aria-label={`${project.title} links`}
+          >
+            <a
+              class="identity-icon-link home-open-source-link"
+              href={project.href}
+              aria-label={`${OPEN_SOURCE_PAGE_COPY.repositoryAction}: ${project.title}`}
+              title={OPEN_SOURCE_PAGE_COPY.repositoryAction}
+              {...getExternalLinkProps()}
+            >
+              <i class="fa-brands fa-github" aria-hidden="true"></i>
+            </a>
+            {project.externalLink && (
+              <a
+                class="identity-icon-link home-open-source-link"
+                href={project.externalLink.href}
+                aria-label={`${project.externalLink.label}: ${project.title}`}
+                title={project.externalLink.label}
+                {...getExternalLinkProps()}
+              >
+                <i class={project.externalLink.icon} aria-hidden="true"></i>
+              </a>
+            )}
+          </span>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<script>
+document.querySelectorAll('[data-project-filter]').forEach((section) => {
+  const buttons = Array.from(
+    section.querySelectorAll<HTMLButtonElement>('[data-project-filter-value]'),
+  );
+  const projects = Array.from(
+    section.querySelectorAll<HTMLElement>('[data-project-kind]'),
+  );
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const value = button.dataset.projectFilterValue;
+      buttons.forEach((other) => {
+        other.setAttribute('aria-pressed', String(other === button));
+      });
+      projects.forEach((project) => {
+        project.hidden =
+          value !== 'all' && project.dataset.projectKind !== value;
+      });
+    });
+  });
+});
+</script>

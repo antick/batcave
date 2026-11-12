@@ -1,0 +1,39 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import RatingShelves from '../../components/RatingShelves.astro';
+import ResourcePage from '../../components/ResourcePage.astro';
+import { SITE_NAME } from '../../lib/constants';
+import {
+  ACTIVE_TV_SHOW_CATEGORIES,
+  getTvShowCategoryPath,
+  TV_SHOW_NAV_SHELVES,
+  TV_SHOWS_PAGE_COPY,
+} from '../../lib/tvShows';
+
+export function getStaticPaths() {
+  return ACTIVE_TV_SHOW_CATEGORIES.map((category) => ({
+    params: { genre: category.id },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+---
+
+<Layout
+  title={`${category.label} ${TV_SHOWS_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={category.description}
+>
+  <ResourcePage
+    activePage="shelf"
+    title={TV_SHOWS_PAGE_COPY.title}
+    subtitle={TV_SHOWS_PAGE_COPY.subtitle}
+  >
+    <RatingShelves
+      copy={TV_SHOWS_PAGE_COPY}
+      navShelves={TV_SHOW_NAV_SHELVES}
+      activeId={category.id}
+      getPath={getTvShowCategoryPath}
+    />
+  </ResourcePage>
+</Layout>

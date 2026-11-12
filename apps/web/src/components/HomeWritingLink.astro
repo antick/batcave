@@ -1,0 +1,21 @@
+---
+import type { HomeWritingItem } from '../lib/home';
+import { formatDateIso, formatDateShort } from '../lib/utils';
+
+interface Props {
+  item: HomeWritingItem;
+}
+
+const { item } = Astro.props;
+---
+
+<a href={item.href} class="identity-writing-link">
+  <span class="identity-writing-title">{item.title}</span>
+  <span class="identity-writing-description">
+    {item.category}
+    ·
+    <time datetime={formatDateIso(item.date)}
+      >{formatDateShort(item.date)}</time
+    >
+  </span>
+</a>

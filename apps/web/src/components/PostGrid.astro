@@ -1,0 +1,39 @@
+---
+import PostCard from './PostCard.astro';
+import { getContentDisplayTitle, getContentImage } from '../lib/content';
+
+interface Post {
+  id: string;
+  data: {
+    title: string;
+    slug: string;
+    description: string;
+    excerpt: string;
+    pubDate: Date;
+    tags: string[];
+    draft: boolean;
+    ogImage: string;
+    ogImageDark: string;
+    ogImageAlt: string;
+  };
+}
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+---
+
+<div class="blog-listing-grid">
+  {posts.map((post) => (
+    <PostCard
+      slug={post.data.slug}
+      title={getContentDisplayTitle(post)}
+      description={post.data.excerpt}
+      pubDate={post.data.pubDate}
+      tags={post.data.tags}
+      image={getContentImage(post.data)}
+    />
+  ))}
+</div>

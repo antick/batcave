@@ -1,0 +1,24 @@
+---
+import { ARTICLE_META_COPY } from '../lib/constants';
+import { getTagId, getTagPath } from '../lib/tags';
+
+interface Props {
+  tags: string[];
+}
+
+const { tags } = Astro.props;
+---
+
+{tags.length > 0 && (
+  <div
+    class="article-tags post-tags"
+    role="group"
+    aria-label={ARTICLE_META_COPY.tagsLabel}
+  >
+    {tags.map((tag) => (
+      <a href={getTagPath({ id: getTagId(tag) })} class="post-tag">
+        {tag}
+      </a>
+    ))}
+  </div>
+)}

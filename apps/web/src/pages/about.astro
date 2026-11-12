@@ -1,0 +1,160 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import {
+  ABOUT_BACKSTORY,
+  ABOUT_FAVORITE_STACK,
+  ABOUT_FOCUS_AREAS,
+  ABOUT_GAMES_FAVORITE,
+  ABOUT_GAMES_PAST,
+  ABOUT_INTERESTS_PERSONAL,
+  ABOUT_PASSIONS,
+  ABOUT_STORY,
+  ABOUT_TOOLS,
+} from '../lib/about';
+import {
+  ABOUT_PAGE_DESCRIPTION,
+  AUTHOR,
+  SITE_NAME,
+  SOCIAL_LINKS,
+} from '../lib/constants';
+---
+
+<Layout
+  title={`About ${AUTHOR.name} - ${SITE_NAME}`}
+  description={ABOUT_PAGE_DESCRIPTION}
+>
+  <ResourcePage activePage="about" title="About">
+    <article class="about-page">
+      <section class="about-hero-panel">
+        <span class="resource-meta">About</span>
+        {ABOUT_STORY.map((item, idx) =>
+          idx === 0 ? (
+            <p class="about-intro-p" set:html={item} />
+          ) : (
+            <p class="about-story-p" set:html={item} />
+          ),
+        )}
+
+        <div
+          class="about-social-row"
+          role="group"
+          aria-label="About page contact links"
+        >
+          {SOCIAL_LINKS.map((link) => (
+            <a
+              href={link.href}
+              class="identity-icon-link"
+              aria-label={link.label}
+              title={link.label}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class={link.icon} aria-hidden="true" />
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="about-section">
+        <div class="about-section-heading">
+          <span class="resource-meta">How I got into web development</span>
+        </div>
+        <div class="about-story-content">
+          {ABOUT_BACKSTORY.map((paragraph) => (
+            <p class="about-story-p">{paragraph}</p>
+          ))}
+        </div>
+      </section>
+
+      <section class="about-section">
+        <div class="about-section-heading">
+          <span class="resource-meta">Focus areas & passions</span>
+        </div>
+        <div class="about-setup-grid">
+          <div class="about-setup-card">
+            <h4>Focus Areas</h4>
+            <ul class="about-bullet-list">
+              {ABOUT_FOCUS_AREAS.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+          <div class="about-setup-card">
+            <h4>Passions</h4>
+            <ul class="about-bullet-list">
+              {ABOUT_PASSIONS.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section">
+        <div class="about-section-heading">
+          <span class="resource-meta">Favorite stack & tools</span>
+        </div>
+        <div class="about-setup-grid">
+          <div class="about-setup-card">
+            <h4>Favorite Stack</h4>
+            <div class="about-stack-list">
+              {ABOUT_FAVORITE_STACK.map((item) => (
+                <div class="about-stack-item">
+                  <span class="about-stack-label">{item.label}</span>
+                  <div class="about-tools-chips">
+                    {item.items.map((subItem) => (
+                      <span class="about-tool-chip">{subItem}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div class="about-setup-card">
+            <h4>Tools & Apps</h4>
+            <div class="about-tools-container">
+              {ABOUT_TOOLS.map((group) => (
+                <div class="about-tools-row">
+                  <span class="about-tools-label">{group.category}</span>
+                  <div class="about-tools-chips">
+                    {group.items.map((item) => (
+                      <span class="about-tool-chip">{item}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section">
+        <div class="about-section-heading">
+          <span class="resource-meta">Gaming</span>
+        </div>
+        <div class="about-setup-grid">
+          <div class="about-setup-card">
+            <h4>Current Favorites</h4>
+            <ul class="about-bullet-list">
+              {ABOUT_GAMES_FAVORITE.map((game) => <li>{game}</li>)}
+            </ul>
+          </div>
+          <div class="about-setup-card">
+            <h4>Past Favorites</h4>
+            <ul class="about-bullet-list">
+              {ABOUT_GAMES_PAST.map((game) => <li>{game}</li>)}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section">
+        <div class="about-section-heading">
+          <span class="resource-meta">Personal Interests</span>
+        </div>
+        <div class="about-tag-cloud">
+          {ABOUT_INTERESTS_PERSONAL.map((item) => (
+            <span class="post-tag">{item}</span>
+          ))}
+        </div>
+      </section>
+    </article>
+  </ResourcePage>
+</Layout>

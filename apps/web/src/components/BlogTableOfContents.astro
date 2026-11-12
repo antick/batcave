@@ -1,0 +1,172 @@
+---
+import type { MarkdownHeading } from 'astro';
+import { getArticleTocHeadings } from '../lib/content';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+const tocHeadings = getArticleTocHeadings(headings);
+---
+
+{tocHeadings.length > 0 && (
+  <aside
+    class="post-toc is-expanded"
+    aria-labelledby="post-toc-title"
+    data-post-toc
+  >
+    <button
+      type="button"
+      class="post-toc-toggle"
+      aria-expanded="true"
+      aria-controls="post-toc-panel"
+      aria-label="Collapse table of contents"
+      data-toc-toggle
+    >
+      <i class="fa-solid fa-list-ul post-toc-rail-icon" aria-hidden="true" />
+      <span>
+        <span id="post-toc-title" class="post-toc-title">
+          Table of contents
+        </span>
+        <span class="post-toc-count">{tocHeadings.length} sections</span>
+      </span>
+      <i class="fa-solid fa-chevron-down post-toc-chevron" aria-hidden="true" />
+    </button>
+
+    <div id="post-toc-panel" class="post-toc-panel" data-toc-panel>
+      <ol class="post-toc-list">
+        {tocHeadings.map((heading, index) => (
+          <li class={`post-toc-item post-toc-depth-${heading.depth}`}>
+            <a href={`#${heading.slug}`} class="post-toc-link" data-toc-link>
+              <span class="post-toc-dot" aria-hidden="true" />
+              <span class="post-toc-index">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span class="post-toc-text">{heading.text}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </aside>
+)}
+
+<script>
+const tocRoot = document.querySelector<HTMLElement>('[data-post-toc]');
+const tocToggle =
+  tocRoot?.querySelector<HTMLButtonElement>('[data-toc-toggle]');
+const tocPanel = tocRoot?.querySelector<HTMLElement>('[data-toc-panel]');
+const tocLinks = Array.from(
+  tocRoot?.querySelectorAll<HTMLAnchorElement>('[data-toc-link]') ?? [],
+);
+
+const setTocExpanded = (isExpanded: boolean) => {
+  if (!tocRoot || !tocToggle || !tocPanel) {
+    return;
+  }
+
+  const tocLayout = tocRoot.closest<HTMLElement>('.post-content-layout');
+
+  tocRoot.classList.toggle('is-expanded', isExpanded);
+  tocLayout?.classList.toggle('toc-is-expanded', isExpanded);
+  tocToggle.setAttribute('aria-expanded', String(isExpanded));
+  tocToggle.setAttribute(
+    'aria-label',
+    `${isExpanded ? 'Collapse' : 'Expand'} table of contents`,
+  );
+  tocPanel.hidden = !isExpanded;
+};
+
+const tocTargets = tocLinks
+  .map((link) => {
+    const targetId = decodeURIComponent(link.hash.slice(1));
+    const target = document.getElementById(targetId);
+
+    return target ? { link, target } : null;
+  })
+  .filter((entry): entry is { link: HTMLAnchorElement; target: HTMLElement } =>
+    Boolean(entry),
+  );
+
+const keepActiveTocVisible = (item: Element) => {
+  if (!tocPanel || tocPanel.hidden) {
+    return;
+  }
+
+  const panelRect = tocPanel.getBoundingClientRect();
+  const itemRect = item.getBoundingClientRect();
+  const itemTop = itemRect.top - panelRect.top + tocPanel.scrollTop;
+  const itemBottom = itemTop + itemRect.height;
+
+  if (itemTop < tocPanel.scrollTop) {
+    tocPanel.scrollTop = itemTop;
+    return;
+  }
+
+  if (itemBottom > tocPanel.scrollTop + tocPanel.clientHeight) {
+    tocPanel.scrollTop = itemBottom - tocPanel.clientHeight;
+  }
+};
+
+const setActiveTocLink = (activeLink: HTMLAnchorElement) => {
+  tocLinks.forEach((link) => {
+    const item = link.closest('.post-toc-item');
+
+    if (link === activeLink) {
+      link.setAttribute('aria-current', 'true');
+      item?.classList.add('is-active');
+      if (item) {
+        keepActiveTocVisible(item);
+      }
+    } else {
+      link.removeAttribute('aria-current');
+      item?.classList.remove('is-active');
+    }
+  });
+};
+
+const updateActiveTocFromScroll = () => {
+  const pageBottom = window.scrollY + window.innerHeight;
+  const documentBottom = document.documentElement.scrollHeight - 4;
+
+  if (pageBottom >= documentBottom) {
+    setActiveTocLink(tocTargets[tocTargets.length - 1].link);
+    return;
+  }
+
+  const activeEntry = tocTargets.reduce((current, entry) => {
+    const targetTop = entry.target.getBoundingClientRect().top;
+
+    return targetTop <= 160 ? entry : current;
+  }, tocTargets[0]);
+
+  setActiveTocLink(activeEntry.link);
+};
+
+tocToggle?.addEventListener('click', () => {
+  setTocExpanded(tocToggle.getAttribute('aria-expanded') !== 'true');
+});
+
+if (tocTargets.length > 0) {
+  let pendingTocFrame = 0;
+
+  const scheduleActiveTocUpdate = () => {
+    if (pendingTocFrame) {
+      return;
+    }
+
+    pendingTocFrame = window.requestAnimationFrame(() => {
+      pendingTocFrame = 0;
+      updateActiveTocFromScroll();
+    });
+  };
+
+  updateActiveTocFromScroll();
+
+  window.addEventListener('scroll', scheduleActiveTocUpdate, {
+    passive: true,
+  });
+  window.addEventListener('resize', scheduleActiveTocUpdate);
+}
+</script>

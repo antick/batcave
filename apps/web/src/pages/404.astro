@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SearchBox from '../components/SearchBox';
+import ResourcePage from '../components/ResourcePage.astro';
+import {
+  NOT_FOUND_PAGE_CONTENT,
+  NOT_FOUND_PAGE_DESCRIPTION,
+} from '../lib/constants';
+---
+
+<Layout
+  title={NOT_FOUND_PAGE_CONTENT.pageTitle}
+  description={NOT_FOUND_PAGE_DESCRIPTION}
+  noindex
+>
+  <ResourcePage
+    title={NOT_FOUND_PAGE_CONTENT.title}
+    subtitle={NOT_FOUND_PAGE_CONTENT.message}
+    className="not-found-page"
+  >
+    <div class="not-found-search">
+      <SearchBox client:load variant="page" autoFocus />
+    </div>
+
+    <a href="/" class="resource-action-link not-found-home-link">
+      {NOT_FOUND_PAGE_CONTENT.homeLabel}
+    </a>
+  </ResourcePage>
+</Layout>

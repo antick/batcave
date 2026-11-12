@@ -1,0 +1,210 @@
+/* Fixed hanging points; only the wings can move inside their margin space. */
+.hanging-bats {
+  display: none;
+}
+
+@media (min-width: 1360px) {
+  html:is(
+      [data-theme="dark-theme"],
+      [data-theme="orange-blue"],
+      [data-theme="teal-purple"],
+      [data-theme="aqua-indigo"]
+    )
+    .hanging-bats {
+    display: block;
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+.hanging-bat-gutter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: max(0px, calc((100% - var(--deck-max-width)) / 2));
+  overflow: hidden;
+}
+
+.hanging-bat-gutter-left {
+  left: 0;
+}
+
+.hanging-bat-gutter-right {
+  right: 0;
+}
+
+.hanging-bat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Spread wings use 96% of this width; never let them reach the content. */
+  width: min(var(--bat-size), calc(100% - 8px));
+  margin-inline: auto;
+  --bat-ink: var(--accent-hover);
+}
+
+.hanging-bat-cord {
+  width: 1px;
+  height: var(--bat-drop);
+  background: linear-gradient(
+    transparent,
+    color-mix(in srgb, var(--bat-ink) 30%, transparent)
+  );
+}
+
+.hanging-bat-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Only the drawn bat is a hover target, not the empty box around it. */
+.hanging-bat-art :is(path, ellipse) {
+  pointer-events: visiblePainted;
+}
+
+.hanging-bat-cord-end {
+  stroke: color-mix(in srgb, var(--bat-ink) 30%, transparent);
+  stroke-width: 0.8;
+}
+
+.hanging-bat-membrane {
+  fill: color-mix(in srgb, var(--bg-gradient-1) 74%, var(--bat-ink));
+  stroke: color-mix(in srgb, var(--bat-ink) 38%, transparent);
+  stroke-width: 0.7;
+}
+
+.hanging-bat-fur {
+  fill: color-mix(in srgb, var(--bg-gradient-1) 62%, var(--bat-ink));
+  stroke: color-mix(in srgb, var(--bat-ink) 38%, transparent);
+  stroke-width: 0.7;
+}
+
+.hanging-bat-bone,
+.hanging-bat-snout {
+  fill: none;
+  stroke: color-mix(in srgb, var(--bat-ink) 48%, transparent);
+  stroke-width: 0.8;
+}
+
+.hanging-bat-claw {
+  fill: none;
+  stroke: color-mix(in srgb, var(--bat-ink) 72%, transparent);
+  stroke-width: 1.2;
+}
+
+.hanging-bat-eyes {
+  stroke: var(--first-word-color);
+  stroke-width: 2.2;
+  opacity: 0.75;
+}
+
+/* Wings pivot at the shoulders; feet, body, and hanging point never move. */
+.hanging-bat-wing {
+  transform-box: view-box;
+  transform: scale(0.25, 0.6);
+  opacity: 0;
+}
+
+.hanging-bat-wing-left {
+  transform-origin: 53px 39.5px;
+}
+
+.hanging-bat-wing-right {
+  transform-origin: 67px 39.5px;
+}
+
+.hanging-bat-art:hover .hanging-bat-wing {
+  transform: none;
+  opacity: 1;
+  animation: none;
+}
+
+.hanging-bat-art:hover .hanging-bat-fold {
+  opacity: 0;
+  animation: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Closing: fold the wings first, then let the wrapped wings reappear. */
+  .hanging-bat-wing {
+    transition:
+      transform 300ms cubic-bezier(0.4, 0, 0.6, 1),
+      opacity 90ms linear 210ms;
+  }
+
+  .hanging-bat-fold {
+    transition: opacity 120ms linear 190ms;
+  }
+
+  /* Opening: unwrap immediately, then stretch to full span. */
+  .hanging-bat-art:hover .hanging-bat-wing {
+    transition:
+      transform 340ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 70ms linear;
+  }
+
+  .hanging-bat-art:hover .hanging-bat-fold {
+    transition: opacity 90ms linear;
+  }
+
+  .hanging-bat-art[data-flapping]:not(:hover) .hanging-bat-wing {
+    animation: hanging-bat-flap var(--bat-flap-duration) ease-in-out;
+  }
+
+  .hanging-bat-art[data-flapping]:not(:hover) .hanging-bat-fold {
+    animation: hanging-bat-unwrap var(--bat-flap-duration) linear;
+  }
+}
+
+/* Two quick wing beats, then the wings wrap the body again. */
+@keyframes hanging-bat-flap {
+  0% {
+    transform: scale(0.25, 0.6);
+    opacity: 0;
+  }
+  7% {
+    opacity: 1;
+  }
+  22%,
+  58% {
+    transform: none;
+  }
+  40% {
+    transform: scale(0.55, 0.88);
+  }
+  82% {
+    transform: scale(0.42, 0.78);
+  }
+  92% {
+    transform: scale(0.28, 0.64);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.25, 0.6);
+    opacity: 0;
+  }
+}
+
+@keyframes hanging-bat-unwrap {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  7%,
+  90% {
+    opacity: 0;
+  }
+}
+
+@media print, (forced-colors: active) {
+  .hanging-bats {
+    display: none !important;
+  }
+}

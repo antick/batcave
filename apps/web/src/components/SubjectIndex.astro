@@ -1,0 +1,48 @@
+---
+export interface SubjectIndexItem {
+  id: string;
+  href: string;
+  label: string;
+  icon: string;
+  count: number;
+}
+
+interface Props {
+  label: string;
+  items: SubjectIndexItem[];
+  activeId: string;
+}
+
+const { label, items, activeId } = Astro.props;
+---
+
+<nav class="subject-index" aria-label={label}>
+  <div class="subject-index-track" data-subject-index-track>
+    {items.map((item) => (
+      <a
+        href={item.href}
+        class:list={[{ 'is-active': item.id === activeId }]}
+        aria-current={item.id === activeId ? 'page' : undefined}
+      >
+        <i class={item.icon} aria-hidden="true"></i>
+        <span class="subject-index-label">{item.label}</span>
+        <span class="subject-index-count">{item.count}</span>
+      </a>
+    ))}
+  </div>
+</nav>
+
+<script>
+document.querySelectorAll('[data-subject-index-track]').forEach((track) => {
+  const active = track.querySelector('.is-active');
+  if (!(track instanceof HTMLElement) || !(active instanceof HTMLElement)) {
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    const offset =
+      active.offsetLeft - (track.clientWidth - active.offsetWidth) / 2;
+    track.scrollTo({ left: Math.max(0, offset), behavior: 'auto' });
+  });
+});
+</script>

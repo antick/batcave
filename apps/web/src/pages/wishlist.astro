@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ResourceEmpty from '../components/ResourceEmpty.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import WishlistShelves from '../components/WishlistShelves.astro';
+import { SITE_NAME } from '../lib/constants';
+import {
+  WISHLIST,
+  WISHLIST_ALL_CATEGORY_ID,
+  WISHLIST_PAGE_COPY,
+} from '../lib/wishlist';
+---
+
+<Layout
+  title={`${WISHLIST_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={WISHLIST_PAGE_COPY.searchDescription}
+>
+  <ResourcePage
+    activePage="shelf"
+    title={WISHLIST_PAGE_COPY.title}
+    subtitle={WISHLIST_PAGE_COPY.subtitle}
+    className="wishlist-page"
+  >
+    {WISHLIST.length > 0 ? (
+      <WishlistShelves activeId={WISHLIST_ALL_CATEGORY_ID} />
+    ) : (
+      <ResourceEmpty message={WISHLIST_PAGE_COPY.empty} />
+    )}
+  </ResourcePage>
+</Layout>

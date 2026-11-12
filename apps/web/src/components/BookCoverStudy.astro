@@ -1,0 +1,31 @@
+---
+import { AUTHOR } from '../lib/constants';
+import type { BOOKS } from '../lib/books';
+
+interface Props {
+  book: (typeof BOOKS)[number];
+  compact?: boolean;
+}
+
+const { book, compact = false } = Astro.props;
+---
+
+<div
+  class:list={[
+    'book-cover-study',
+    `book-cover-${book.tone}`,
+    { 'book-cover-compact': compact },
+  ]}
+  role="img"
+  aria-label={`${book.label} provisional cover study; final title and cover to come`}
+>
+  <span class="book-cover-author">{AUTHOR.name}</span>
+  <span class="book-cover-number" aria-hidden="true">
+    {book.coverLabel.slice(-2)}
+  </span>
+  <div class="book-cover-title" aria-hidden="true">
+    <span>Working title</span>
+    <strong>{book.coverLabel}</strong>
+  </div>
+  <span class="book-cover-note">Cover study · not final</span>
+</div>

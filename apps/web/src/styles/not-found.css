@@ -1,0 +1,25 @@
+.not-found-page {
+  display: flex;
+  min-height: 25rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.not-found-page .resource-page-header {
+  margin-bottom: 2rem;
+}
+
+.not-found-page .card-accent-line {
+  margin-inline: auto;
+}
+
+.not-found-search {
+  width: min(100%, 30rem);
+  margin-bottom: 2rem;
+}
+
+.not-found-home-link {
+  align-self: center;
+}

@@ -1,0 +1,46 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import { AUTHOR, SITE_NAME } from '../lib/constants';
+import { BOOKS, BOOKS_PAGE_COPY } from '../lib/books';
+import BookCoverStudy from '../components/BookCoverStudy.astro';
+---
+
+<Layout
+  title={`Books by ${AUTHOR.name} - ${SITE_NAME}`}
+  description={BOOKS_PAGE_COPY.searchDescription}
+>
+  <ResourcePage
+    activePage="books"
+    title={BOOKS_PAGE_COPY.title}
+    subtitle={BOOKS_PAGE_COPY.subtitle}
+    intro={BOOKS_PAGE_COPY.intro}
+    className="books-page"
+  >
+    <div class="books-grid">
+      {BOOKS.map((book) => (
+        <article class="book-card">
+          <BookCoverStudy book={book} />
+
+          <div class="book-copy">
+            <span class="resource-meta resource-meta-progress">
+              {book.status}
+            </span>
+            <h2 class="resource-title">{book.label}</h2>
+            <p class="book-direction-label">Current direction</p>
+            <p class="resource-description">{book.direction}</p>
+            <ul class="resource-tags" aria-label={`${book.label} themes`}>
+              {book.themes.map((theme) => (
+                <li class="post-tag">{theme}</li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <p class="books-note">
+      {BOOKS_PAGE_COPY.note}
+    </p>
+  </ResourcePage>
+</Layout>

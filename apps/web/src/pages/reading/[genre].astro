@@ -1,0 +1,39 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import RatingShelves from '../../components/RatingShelves.astro';
+import ResourcePage from '../../components/ResourcePage.astro';
+import { SITE_NAME } from '../../lib/constants';
+import {
+  ACTIVE_READING_CATEGORIES,
+  getReadingCategoryPath,
+  READING_NAV_SHELVES,
+  READING_PAGE_COPY,
+} from '../../lib/reading';
+
+export function getStaticPaths() {
+  return ACTIVE_READING_CATEGORIES.map((category) => ({
+    params: { genre: category.id },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+---
+
+<Layout
+  title={`${category.label} ${READING_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={category.description}
+>
+  <ResourcePage
+    activePage="shelf"
+    title={READING_PAGE_COPY.title}
+    subtitle={READING_PAGE_COPY.subtitle}
+  >
+    <RatingShelves
+      copy={READING_PAGE_COPY}
+      navShelves={READING_NAV_SHELVES}
+      activeId={category.id}
+      getPath={getReadingCategoryPath}
+    />
+  </ResourcePage>
+</Layout>

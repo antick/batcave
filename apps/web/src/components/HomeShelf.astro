@@ -1,0 +1,50 @@
+---
+import { BOOKS, BOOKS_HOME_COPY, BOOKS_PATH } from '../lib/books';
+import { HOME_SHELF_COPY, SHELF_PATH, type ShelfCard } from '../lib/shelf';
+import BookCoverStudy from './BookCoverStudy.astro';
+import HomeSectionHeader from './HomeSectionHeader.astro';
+
+interface Props {
+  cards: ShelfCard[];
+}
+
+const { cards } = Astro.props;
+---
+
+<section class="home-section home-shelf" aria-labelledby="home-shelf-title">
+  <HomeSectionHeader
+    id="home-shelf-title"
+    label={HOME_SHELF_COPY.label}
+    action={{ href: SHELF_PATH, label: HOME_SHELF_COPY.action }}
+  />
+
+  <div class="home-shelf-grid">
+    <a class="home-shelf-books" href={BOOKS_PATH}>
+      <span class="home-shelf-covers" aria-hidden="true">
+        {BOOKS.map((book) => <BookCoverStudy book={book} compact />)}
+      </span>
+      <span class="home-shelf-books-copy">
+        <strong>{BOOKS_HOME_COPY.title}</strong>
+        <span>{BOOKS_HOME_COPY.description}</span>
+        <span class="home-shelf-books-action">
+          {BOOKS_HOME_COPY.action}
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </span>
+      </span>
+    </a>
+
+    {cards.map((card) => (
+      <a
+        href={card.href}
+        class="home-shelf-card"
+        data-empty={card.count === 0 ? 'true' : undefined}
+      >
+        <i class={card.icon} aria-hidden="true"></i>
+        <strong>{card.title}</strong>
+        <span>
+          {card.count === 0 ? HOME_SHELF_COPY.emptyLabel : card.countLabel}
+        </span>
+      </a>
+    ))}
+  </div>
+</section>

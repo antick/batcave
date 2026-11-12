@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RatingShelves from '../components/RatingShelves.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import { SITE_NAME } from '../lib/constants';
+import { RATING_ALL_CATEGORY_ID } from '../lib/ratings';
+import {
+  getReadingCategoryPath,
+  READING_NAV_SHELVES,
+  READING_PAGE_COPY,
+} from '../lib/reading';
+---
+
+<Layout
+  title={`${READING_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={READING_PAGE_COPY.searchDescription}
+>
+  <ResourcePage
+    activePage="shelf"
+    title={READING_PAGE_COPY.title}
+    subtitle={READING_PAGE_COPY.subtitle}
+  >
+    <RatingShelves
+      copy={READING_PAGE_COPY}
+      navShelves={READING_NAV_SHELVES}
+      activeId={RATING_ALL_CATEGORY_ID}
+      getPath={getReadingCategoryPath}
+    />
+  </ResourcePage>
+</Layout>

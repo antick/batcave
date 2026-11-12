@@ -1,0 +1,14 @@
+---
+import type { MusicTrack } from '../lib/music';
+import MusicCard from './MusicCard.astro';
+
+interface Props {
+  tracks: MusicTrack[];
+}
+
+const { tracks } = Astro.props;
+---
+
+<div class="music-grid">
+  {tracks.map((track) => <MusicCard track={track} />)}
+</div>

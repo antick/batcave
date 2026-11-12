@@ -1,0 +1,17 @@
+---
+interface Props {
+  storageKey: string;
+  fallback: string;
+}
+
+const { storageKey, fallback } = Astro.props;
+---
+
+<script is:inline define:vars={{ storageKey, fallback }}>
+try {
+  const url = sessionStorage.getItem(storageKey) || fallback;
+  const selector = `a.breadcrumb-back[data-back-key="${storageKey}"]`;
+  const link = document.querySelector(selector);
+  if (link) link.setAttribute('href', url);
+} catch {}
+</script>

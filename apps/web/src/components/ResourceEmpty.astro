@@ -1,0 +1,9 @@
+---
+interface Props {
+  message: string;
+}
+
+const { message } = Astro.props;
+---
+
+<p class="resource-empty" role="status">{message}</p>

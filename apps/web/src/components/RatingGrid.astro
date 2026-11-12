@@ -1,0 +1,59 @@
+---
+import {
+  splitRatingEntries,
+  type RatingCollectionCopy,
+  type RatingEntry,
+} from '../lib/ratings';
+import RatingCard from './RatingCard.astro';
+
+interface Props {
+  entries: RatingEntry[];
+  copy: RatingCollectionCopy;
+  showGenre?: boolean;
+}
+
+const { entries, copy, showGenre = true } = Astro.props;
+const { watched, queued } = splitRatingEntries(entries);
+---
+
+<div class="rating-collection">
+  <section class="rating-section" aria-labelledby="rating-queued-title">
+    <header class="resource-category-header">
+      <div class="resource-category-heading">
+        <h3 id="rating-queued-title">{copy.queuedTitle}</h3>
+        <span class="resource-category-count">{queued.length}</span>
+      </div>
+    </header>
+    {queued.length > 0 ? (
+      <div class="rating-grid">
+        {queued.map((entry) => (
+          <RatingCard entry={entry} showGenre={showGenre} />
+        ))}
+      </div>
+    ) : (
+      <p class="resource-empty" role="status">
+        {copy.queuedEmpty}
+      </p>
+    )}
+  </section>
+
+  <section class="rating-section" aria-labelledby="rating-watched-title">
+    <header class="resource-category-header">
+      <div class="resource-category-heading">
+        <h3 id="rating-watched-title">{copy.watchedTitle}</h3>
+        <span class="resource-category-count">{watched.length}</span>
+      </div>
+    </header>
+    {watched.length > 0 ? (
+      <div class="rating-grid">
+        {watched.map((entry) => (
+          <RatingCard entry={entry} showGenre={showGenre} />
+        ))}
+      </div>
+    ) : (
+      <p class="resource-empty" role="status">
+        {copy.watchedEmpty}
+      </p>
+    )}
+  </section>
+</div>

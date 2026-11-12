@@ -1,0 +1,36 @@
+---
+import { formatDateShort } from '../lib/utils';
+import ThemeAwareImage from './ThemeAwareImage.astro';
+import type { ThemeImage } from '../lib/types';
+import { getArticlePath } from '../lib/articleRoutes';
+
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags: string[];
+  image: ThemeImage;
+}
+
+const { slug, title, description, pubDate, tags, image } = Astro.props;
+---
+
+<a href={getArticlePath({ slug })} class="post-card">
+  <ThemeAwareImage
+    image={image}
+    className="resource-card-image"
+    loading="lazy"
+  />
+  <span class="post-date">{formatDateShort(pubDate)}</span>
+  {tags.length > 0 && (
+    <div class="post-tags">
+      {tags.slice(0, 3).map((tag) => (
+        <span class="post-tag">{tag}</span>
+      ))}
+    </div>
+  )}
+  <h3 class="post-title">{title}</h3>
+  <p class="post-excerpt">{description}</p>
+  <span class="post-read-more">Read more</span>
+</a>

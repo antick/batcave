@@ -1,0 +1,69 @@
+---
+import { AUTHOR, SOCIAL_LINKS } from '../lib/constants';
+import { HOME_STATS_LABEL, type HomePulseStat } from '../lib/home';
+import type { HomeNowItem } from '../lib/homeNow';
+import { getExternalLinkProps } from '../lib/utils';
+import HomeNow from './HomeNow.astro';
+import TypingText from './TypingText';
+
+interface Props {
+  nowItems: HomeNowItem[];
+  stats: HomePulseStat[];
+}
+
+const { nowItems, stats } = Astro.props;
+---
+
+<section class="home-section home-hero">
+  <div class="home-hero-grid">
+    <div class="identity-profile">
+      <h1 class="identity-name">{AUTHOR.firstName} {AUTHOR.lastName}</h1>
+
+      <div class="identity-role">
+        <span class="identity-role-dot" aria-hidden="true"></span>
+        <span>{AUTHOR.role}</span>
+      </div>
+
+      <div class="identity-tagline">
+        <span class="identity-prompt" aria-hidden="true">&gt;</span>
+        <TypingText client:load />
+      </div>
+
+      <p class="identity-contact-msg">{AUTHOR.contactMessage}</p>
+
+      <div
+        class="identity-link-row"
+        role="group"
+        aria-label="Primary and social links"
+      >
+        {SOCIAL_LINKS.map((link) => (
+          <a
+            href={link.href}
+            class="identity-icon-link"
+            aria-label={link.label}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class={link.icon} aria-hidden="true" />
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <HomeNow items={nowItems} />
+  </div>
+
+  <nav class="home-pulse-stats" aria-label={HOME_STATS_LABEL}>
+    {stats.map((stat) => (
+      <a
+        href={stat.href}
+        class="home-pulse-stat"
+        {...getExternalLinkProps(stat.external)}
+      >
+        <i class={stat.icon} aria-hidden="true" />
+        <strong>{stat.value.toLocaleString('en-US')}</strong>
+        <span>{stat.label}</span>
+      </a>
+    ))}
+  </nav>
+</section>

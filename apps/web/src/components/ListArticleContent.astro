@@ -1,0 +1,14 @@
+---
+import type { ListArticleData } from '../lib/listArticle';
+import CuratedListItems from './CuratedListItems.astro';
+
+interface Props {
+  list: ListArticleData;
+}
+
+const { list } = Astro.props;
+---
+
+<div class="list-article">
+  <CuratedListItems items={list.items} layout={list.layout} />
+</div>

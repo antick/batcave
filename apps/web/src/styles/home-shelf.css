@@ -1,0 +1,201 @@
+/* Homepage shelf strip: book projects beside shelf collection counts. */
+
+.home-shelf-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.home-shelf-books,
+.home-shelf-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text-color);
+  text-decoration: none;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.home-shelf-books::after,
+.home-shelf-card::after {
+  display: none;
+}
+
+.home-shelf-books:hover,
+.home-shelf-card:hover {
+  border-color: color-mix(in srgb, var(--accent-color) 38%, transparent);
+  background: rgba(255, 255, 255, 0.055);
+  transform: translateY(-1px);
+}
+
+.home-shelf-books:focus-visible,
+.home-shelf-card:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 2px;
+}
+
+.home-shelf-books {
+  grid-row: span 2;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 18px;
+  background: color-mix(in srgb, var(--accent-color) 6%, transparent);
+}
+
+.home-shelf-covers {
+  display: flex;
+  flex-shrink: 0;
+  padding: 4px 6px 8px;
+}
+
+.home-shelf-covers .book-cover-compact {
+  box-sizing: border-box;
+  width: 78px;
+  height: 104px;
+  flex: 0 0 auto;
+  padding: 8px;
+  border-radius: 3px 7px 7px 3px;
+  box-shadow:
+    -4px 7px 14px color-mix(in srgb, var(--shadow-color) 34%, transparent),
+    inset 3px 0 0 color-mix(in srgb, var(--text-color) 8%, transparent);
+  transition: transform 0.25s ease;
+}
+
+.home-shelf-covers .book-cover-compact:first-child {
+  transform: rotate(-6deg);
+}
+
+.home-shelf-covers .book-cover-compact:last-child {
+  margin-left: -22px;
+  transform: translateY(-4px) rotate(6deg);
+}
+
+.home-shelf-books:hover .book-cover-compact:first-child {
+  transform: rotate(-9deg);
+}
+
+.home-shelf-books:hover .book-cover-compact:last-child {
+  transform: translateY(-4px) rotate(9deg);
+}
+
+.book-cover-compact .book-cover-author,
+.book-cover-compact .book-cover-title span {
+  letter-spacing: 0.03em;
+}
+
+.book-cover-compact .book-cover-number {
+  top: 18%;
+  right: 7px;
+  font-size: 3rem;
+}
+
+.book-cover-compact .book-cover-title {
+  gap: 2px;
+}
+
+.book-cover-compact .book-cover-title strong {
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+.book-cover-compact .book-cover-note {
+  display: none;
+}
+
+.home-shelf-books-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  line-height: 1.45;
+}
+
+.home-shelf-books-copy > span:not(.home-shelf-books-action) {
+  opacity: 0.7;
+}
+
+.home-shelf-books-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-hover);
+  font-weight: 700;
+}
+
+.home-shelf-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  gap: 2px 10px;
+  align-items: center;
+  min-width: 0;
+  padding: 12px;
+}
+
+.home-shelf-card > i {
+  grid-row: 1 / -1;
+  width: 1.1rem;
+  color: var(--accent-hover);
+  text-align: center;
+  opacity: 0.8;
+}
+
+.home-shelf-card strong,
+.home-shelf-card span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-shelf-card span {
+  opacity: 0.6;
+}
+
+.home-shelf-card[data-empty="true"] {
+  opacity: 0.6;
+}
+
+.home-topics-list li {
+  display: contents;
+}
+
+html[data-theme^="light"] .home-shelf-books,
+html[data-theme^="light"] .home-shelf-card {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.018);
+}
+
+html[data-theme^="light"] .home-shelf-books:hover,
+html[data-theme^="light"] .home-shelf-card:hover {
+  border-color: color-mix(in srgb, var(--accent-color) 34%, transparent);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+@media (max-width: 1024px) {
+  .home-shelf-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .home-shelf-books {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .home-shelf-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-shelf-books,
+  .home-shelf-card,
+  .home-shelf-covers .book-cover-compact {
+    transition: none;
+  }
+}

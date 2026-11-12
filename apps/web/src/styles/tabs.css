@@ -1,0 +1,46 @@
+/* Reusable horizontally resilient category tabs for resource pages. */
+
+.resource-page-card:has([data-scrollable-tabs]) {
+  overflow-x: clip;
+}
+
+.category-nav-scrollable {
+  width: 100%;
+  max-width: 100%;
+  flex-wrap: nowrap;
+  padding-bottom: 7px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-color: color-mix(in srgb, var(--accent-color) 45%, transparent)
+    transparent;
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+}
+
+.category-nav-scrollable .category-nav-link {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.category-nav-icon {
+  width: 1em;
+  margin-right: 7px;
+  color: var(--accent-hover);
+  text-align: center;
+  opacity: 0.78;
+  transition: opacity 0.18s ease;
+}
+
+.category-nav-link:hover .category-nav-icon,
+.category-nav-link.active .category-nav-icon {
+  opacity: 1;
+}
+
+@media (min-width: 901px) {
+  .category-nav-scrollable {
+    flex-wrap: wrap;
+    padding-bottom: 0;
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+}

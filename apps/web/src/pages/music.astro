@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MusicShelves from '../components/MusicShelves.astro';
+import ResourceEmpty from '../components/ResourceEmpty.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import { SITE_NAME } from '../lib/constants';
+import {
+  MUSIC_ALL_CATEGORY_ID,
+  MUSIC_PAGE_COPY,
+  MUSIC_TRACKS,
+} from '../lib/music';
+---
+
+<Layout
+  title={`${MUSIC_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={MUSIC_PAGE_COPY.searchDescription}
+>
+  <ResourcePage
+    activePage="shelf"
+    title={MUSIC_PAGE_COPY.title}
+    subtitle={MUSIC_PAGE_COPY.subtitle}
+  >
+    {MUSIC_TRACKS.length === 0 && (
+      <ResourceEmpty message={MUSIC_PAGE_COPY.empty} />
+    )}
+    <MusicShelves activeId={MUSIC_ALL_CATEGORY_ID} />
+  </ResourcePage>
+</Layout>

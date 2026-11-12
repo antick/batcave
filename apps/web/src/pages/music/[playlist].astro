@@ -1,0 +1,29 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import MusicShelves from '../../components/MusicShelves.astro';
+import ResourcePage from '../../components/ResourcePage.astro';
+import { SITE_NAME } from '../../lib/constants';
+import { ACTIVE_MUSIC_CATEGORIES, MUSIC_PAGE_COPY } from '../../lib/music';
+
+export function getStaticPaths() {
+  return ACTIVE_MUSIC_CATEGORIES.map((category) => ({
+    params: { playlist: category.id },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+---
+
+<Layout
+  title={`${category.label} ${MUSIC_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={category.description}
+>
+  <ResourcePage
+    activePage="shelf"
+    title={MUSIC_PAGE_COPY.title}
+    subtitle={MUSIC_PAGE_COPY.subtitle}
+  >
+    <MusicShelves activeId={category.id} />
+  </ResourcePage>
+</Layout>

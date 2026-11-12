@@ -1,0 +1,83 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ResourcePage from '../../components/ResourcePage.astro';
+import ProjectTechStack from '../../components/ProjectTechStack.astro';
+import ThemeAwareImage from '../../components/ThemeAwareImage.astro';
+import { getProjectStatusTone, getVisibleProjects } from '../../lib/projects';
+import { PROJECTS_BACK_STORAGE_KEY, SITE_NAME } from '../../lib/constants';
+
+export function getStaticPaths() {
+  return getVisibleProjects().map((project) => ({
+    params: { project: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const statusTone = getProjectStatusTone(project.status);
+---
+
+<Layout
+  title={`${project.title} - Projects - ${SITE_NAME}`}
+  description={project.description}
+>
+  <ResourcePage
+    activePage="projects"
+    title={project.title}
+    subtitle={project.summary}
+    intro={project.description}
+    breadcrumb={{
+      href: '/projects',
+      label: 'Projects',
+      type: 'Project',
+      backStorageKey: PROJECTS_BACK_STORAGE_KEY,
+    }}
+  >
+    <article class="project-detail">
+      <figure class="project-hero-shot">
+        <ThemeAwareImage image={project.image} loading="eager" />
+      </figure>
+
+      <div class="project-detail-meta">
+        <span
+          class:list={[
+            'resource-meta',
+            statusTone && `resource-meta-${statusTone}`,
+          ]}
+        >
+          {project.status}
+        </span>
+        <div class="resource-tags">
+          {project.tags.map((tag) => <span class="post-tag">{tag}</span>)}
+        </div>
+      </div>
+
+      {project.actions.length > 0 && (
+        <div class="project-action-row">
+          {project.actions.map((action) => (
+            <a
+              href={action.href}
+              class="resource-action-link"
+              target={action.href.startsWith('/') ? undefined : '_blank'}
+              rel={
+                action.href.startsWith('/') ? undefined : 'noopener noreferrer'
+              }
+            >
+              <i class={action.icon} aria-hidden="true" />
+              {action.label}
+            </a>
+          ))}
+        </div>
+      )}
+
+      <section class="project-detail-panel">
+        <h3>Highlights</h3>
+        <ul class="project-detail-list">
+          {project.highlights.map((highlight) => <li>{highlight}</li>)}
+        </ul>
+      </section>
+
+      <ProjectTechStack stack={project.techStack} />
+    </article>
+  </ResourcePage>
+</Layout>

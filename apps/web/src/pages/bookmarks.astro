@@ -1,0 +1,23 @@
+---
+import DirectoryShelves from '../components/DirectoryShelves.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import Layout from '../layouts/Layout.astro';
+import { SITE_NAME } from '../lib/constants';
+import {
+  DIRECTORY_ALL_CATEGORY_ID,
+  DIRECTORY_PAGE_COPY,
+} from '../lib/directory';
+---
+
+<Layout
+  title={`${DIRECTORY_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={DIRECTORY_PAGE_COPY.subtitle}
+>
+  <ResourcePage
+    activePage="shelf"
+    title={DIRECTORY_PAGE_COPY.title}
+    subtitle={DIRECTORY_PAGE_COPY.subtitle}
+  >
+    <DirectoryShelves activeId={DIRECTORY_ALL_CATEGORY_ID} />
+  </ResourcePage>
+</Layout>

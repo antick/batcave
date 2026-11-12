@@ -1,0 +1,42 @@
+---
+import { getBlogAllPath, getBlogCategoryPath } from '../lib/articleRoutes';
+import { HOME_TOPICS_COPY, type BlogCategorySummary } from '../lib/blog';
+import { BLOG_CATEGORY_FALLBACK_ICON } from '../lib/constants';
+import HomeSectionHeader from './HomeSectionHeader.astro';
+
+interface Props {
+  summaries: BlogCategorySummary[];
+}
+
+const { summaries } = Astro.props;
+---
+
+<section class="home-section home-topics" aria-labelledby="home-topics-title">
+  <HomeSectionHeader
+    id="home-topics-title"
+    label={HOME_TOPICS_COPY.label}
+    action={{ href: getBlogAllPath(), label: HOME_TOPICS_COPY.action }}
+  />
+
+  <ul class="home-chip-row home-topics-list">
+    {summaries.map(({ category, count }) => (
+      <li>
+        <a
+          href={getBlogCategoryPath(category)}
+          class="home-chip home-topic-chip"
+          title={category.description}
+          aria-label={`${category.label}, ${count} ${count === 1 ? 'post' : 'posts'}`}
+        >
+          <i
+            class={category.icon ?? BLOG_CATEGORY_FALLBACK_ICON}
+            aria-hidden="true"
+          ></i>
+          {category.label}
+          <span class="home-chip-count" aria-hidden="true">
+            {count}
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>

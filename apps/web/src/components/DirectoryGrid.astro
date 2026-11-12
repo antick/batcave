@@ -1,0 +1,14 @@
+---
+import DirectoryCard from './DirectoryCard.astro';
+import type { DirectoryEntry } from '../lib/types';
+
+interface Props {
+  entries: DirectoryEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<div class="directory-grid">
+  {entries.map((entry) => <DirectoryCard entry={entry} />)}
+</div>

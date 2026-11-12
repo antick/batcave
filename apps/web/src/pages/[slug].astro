@@ -1,0 +1,179 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleComments from '../components/ArticleComments.astro';
+import ArticleDiscussionCta from '../components/ArticleDiscussionCta.astro';
+import ArticleMeta from '../components/ArticleMeta.astro';
+import ArticleTags from '../components/ArticleTags.astro';
+import BlogTableOfContents from '../components/BlogTableOfContents.astro';
+import ListArticleContent from '../components/ListArticleContent.astro';
+import PromptArticleContent from '../components/PromptArticleContent.astro';
+import RelatedContent from '../components/RelatedContent.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteNav from '../components/SiteNav';
+import ThemeAwareImage from '../components/ThemeAwareImage.astro';
+import Layout from '../layouts/Layout.astro';
+import { getArticlePath, getBlogAllPath } from '../lib/articleRoutes';
+import { BLOG_BACK_STORAGE_KEY, SITE_NAME } from '../lib/constants';
+import {
+  filterVisibleContent,
+  getContentDisplayTitle,
+  getContentImage,
+  getEstimatedReadingMinutes,
+  getRelatedContent,
+  RELATED_CONTENT_HEADING,
+  shouldRenderArticleTableOfContents,
+  shouldShowArticleFeaturedImage,
+  shouldShowArticleHeaderMeta,
+  shouldShowArticleRelatedPosts,
+  validateRelatedContentReferences,
+} from '../lib/content';
+import { getDynamicNavItems } from '../lib/navHelper';
+
+export async function getStaticPaths() {
+  const posts = filterVisibleContent(await getCollection('blog'));
+  validateRelatedContentReferences(posts);
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const { pubDate, updatedDate, tags, description } = post.data;
+const siteNavItems = await getDynamicNavItems();
+const displayTitle = getContentDisplayTitle(post);
+const showFeaturedImage = shouldShowArticleFeaturedImage(post.data);
+const showRelatedPosts = shouldShowArticleRelatedPosts(post.data);
+const showHeaderMeta = shouldShowArticleHeaderMeta(post.data);
+const featuredImage = showFeaturedImage ? getContentImage(post.data) : null;
+const readingMinutes = showHeaderMeta
+  ? getEstimatedReadingMinutes(post.body ?? '')
+  : 0;
+const showTableOfContents = shouldRenderArticleTableOfContents(
+  headings,
+  Boolean(post.data.prompt),
+);
+const relatedPosts = showRelatedPosts
+  ? getRelatedContent(
+      filterVisibleContent(await getCollection('blog')),
+      post.data.relatedPosts,
+    ).map((relatedPost) => ({
+      title: getContentDisplayTitle(relatedPost),
+      description: relatedPost.data.excerpt,
+      href: getArticlePath(relatedPost.data),
+      image: getContentImage(relatedPost.data),
+      tags: relatedPost.data.tags,
+    }))
+  : [];
+---
+
+<Layout title={`${displayTitle} - ${SITE_NAME}`} seo={post.data}>
+  <div class="deck-scene blog-deck-scene">
+    <SiteNav client:load activePage="blog" siteNavItems={siteNavItems} />
+
+    <main class="deck-wrapper">
+      <div class="page-card-stack">
+        <div class="page-card blog-page-card">
+          <div class="card-content blog-post-card">
+            <article class="blog-post">
+              <div class="post-toolbar">
+                <nav class="resource-breadcrumb" aria-label="Breadcrumb">
+                  <a
+                    href={getBlogAllPath()}
+                    class="breadcrumb-back"
+                    data-blog-back-link
+                  >
+                    <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                    <span>Back to Blog</span>
+                  </a>
+                </nav>
+                {showHeaderMeta && (
+                  <ArticleMeta
+                    publishedDate={pubDate}
+                    updatedDate={updatedDate}
+                    readingMinutes={readingMinutes}
+                  />
+                )}
+              </div>
+
+              <header class="post-header">
+                <h1 class="post-header-title">{displayTitle}</h1>
+                <p class="post-header-desc">{description}</p>
+              </header>
+
+              {featuredImage && (
+                <ThemeAwareImage
+                  image={featuredImage}
+                  className="post-featured-image"
+                  loading="eager"
+                />
+              )}
+
+              <div
+                class:list={[
+                  'post-content-layout',
+                  { 'toc-is-expanded': showTableOfContents },
+                ]}
+              >
+                {showTableOfContents && (
+                  <BlogTableOfContents headings={headings} />
+                )}
+
+                <div class="post-body">
+                  {post.data.prompt ? (
+                    <PromptArticleContent
+                      body={post.body ?? ''}
+                      prompt={post.data.prompt}
+                    />
+                  ) : post.data.list ? (
+                    <ListArticleContent list={post.data.list} />
+                  ) : (
+                    <Content />
+                  )}
+                </div>
+              </div>
+
+              {showHeaderMeta && <ArticleTags tags={tags} />}
+
+              {showRelatedPosts && (
+                <RelatedContent
+                  title={RELATED_CONTENT_HEADING}
+                  items={relatedPosts}
+                />
+              )}
+
+              <ArticleDiscussionCta />
+
+              {post.data.discussion && (
+                <ArticleComments discussion={post.data.discussion} />
+              )}
+
+              <footer class="post-footer">
+                <a
+                  href={getBlogAllPath()}
+                  class="back-link"
+                  data-blog-back-link
+                >
+                  <i class="fa-solid fa-arrow-left"></i>
+                  All posts
+                </a>
+              </footer>
+            </article>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <SiteFooter />
+  <script is:inline define:vars={{ storageKey: BLOG_BACK_STORAGE_KEY }}>
+  try {
+    const url = sessionStorage.getItem(storageKey);
+    if (url) {
+      document.querySelectorAll('[data-blog-back-link]').forEach((link) => {
+        link.setAttribute('href', url);
+      });
+    }
+  } catch {}
+  </script>
+</Layout>

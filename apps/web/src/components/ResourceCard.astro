@@ -1,0 +1,151 @@
+---
+import ThemeAwareImage from './ThemeAwareImage.astro';
+import type { ThemeImage } from '../lib/types';
+
+interface LinkAction {
+  href: string;
+  label: string;
+  icon: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  href?: string;
+  image?: string;
+  imageAlt?: string;
+  imageVariants?: ThemeImage;
+  meta?: string;
+  metaTone?: 'live' | 'progress' | 'planning';
+  tags?: string[];
+  actions?: LinkAction[];
+  variant?: 'compact';
+}
+
+const {
+  title,
+  description,
+  href,
+  image,
+  imageAlt = '',
+  imageVariants,
+  meta,
+  metaTone,
+  tags = [],
+  actions = [],
+  variant,
+} = Astro.props;
+const cardClasses = ['resource-card', variant && `resource-card-${variant}`];
+---
+
+{href ? (
+  <a href={href} class:list={cardClasses}>
+    {imageVariants ? (
+      <ThemeAwareImage
+        image={imageVariants}
+        className="resource-card-image"
+        loading="lazy"
+      />
+    ) : (
+      image && (
+        <img
+          src={image}
+          alt={imageAlt}
+          class="resource-card-image"
+          loading="lazy"
+          decoding="async"
+        />
+      )
+    )}
+
+    <div class="resource-card-header">
+      <div>
+        {meta && (
+          <span
+            class:list={[
+              'resource-meta',
+              metaTone && `resource-meta-${metaTone}`,
+            ]}
+          >
+            {meta}
+          </span>
+        )}
+        <h3 class="resource-title">{title}</h3>
+      </div>
+      <i class="fa-solid fa-arrow-right resource-card-cue" aria-hidden="true" />
+    </div>
+
+    <p class="resource-description">{description}</p>
+
+    {tags.length > 0 && (
+      <div class="resource-tags">
+        {tags.map((tag) => (
+          <span class="post-tag">{tag}</span>
+        ))}
+      </div>
+    )}
+  </a>
+) : (
+  <article class:list={cardClasses}>
+    {imageVariants ? (
+      <ThemeAwareImage
+        image={imageVariants}
+        className="resource-card-image"
+        loading="lazy"
+      />
+    ) : (
+      image && (
+        <img
+          src={image}
+          alt={imageAlt}
+          class="resource-card-image"
+          loading="lazy"
+          decoding="async"
+        />
+      )
+    )}
+
+    <div class="resource-card-header">
+      <div>
+        {meta && (
+          <span
+            class:list={[
+              'resource-meta',
+              metaTone && `resource-meta-${metaTone}`,
+            ]}
+          >
+            {meta}
+          </span>
+        )}
+        <h3 class="resource-title">{title}</h3>
+      </div>
+      {actions.length > 0 && (
+        <div class="resource-actions">
+          {actions.map((action) => (
+            <a
+              href={action.href}
+              class="resource-action"
+              aria-label={action.label}
+              target={action.href.startsWith('/') ? undefined : '_blank'}
+              rel={
+                action.href.startsWith('/') ? undefined : 'noopener noreferrer'
+              }
+            >
+              <i class={action.icon} />
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <p class="resource-description">{description}</p>
+
+    {tags.length > 0 && (
+      <div class="resource-tags">
+        {tags.map((tag) => (
+          <span class="post-tag">{tag}</span>
+        ))}
+      </div>
+    )}
+  </article>
+)}

@@ -1,0 +1,63 @@
+---
+import {
+  RATING_ALL_CATEGORY_ID,
+  type RatingCollectionCopy,
+  type RatingShelf,
+} from '../lib/ratings';
+import ResourceCategorySection from './ResourceCategorySection.astro';
+import RatingGrid from './RatingGrid.astro';
+import SubjectIndex from './SubjectIndex.astro';
+
+interface Props {
+  copy: RatingCollectionCopy;
+  navShelves: RatingShelf[];
+  activeId?: string;
+  getPath: (shelf: Pick<RatingShelf, 'id'>) => string;
+}
+
+const {
+  copy,
+  navShelves,
+  activeId = RATING_ALL_CATEGORY_ID,
+  getPath,
+} = Astro.props;
+const activeShelf = navShelves.find((shelf) => shelf.id === activeId);
+const isAll = activeId === RATING_ALL_CATEGORY_ID;
+const showIndex = navShelves.length > 1;
+---
+
+<div class="resource-shelves" data-shelf-active={activeId}>
+  {showIndex && (
+    <SubjectIndex
+      label={copy.subjectIndexLabel}
+      activeId={activeId}
+      items={navShelves.map((shelf) => ({
+        id: shelf.id,
+        href: getPath(shelf),
+        label: shelf.label,
+        icon: shelf.icon,
+        count: shelf.entries.length,
+      }))}
+    />
+  )}
+
+  <div class="resource-shelf-list">
+    {activeShelf && isAll && (
+      <RatingGrid copy={copy} entries={activeShelf.entries} showGenre />
+    )}
+    {activeShelf && !isAll && (
+      <ResourceCategorySection
+        id={activeShelf.id}
+        title={activeShelf.label}
+        description={activeShelf.description}
+        count={activeShelf.entries.length}
+      >
+        <RatingGrid
+          copy={copy}
+          entries={activeShelf.entries}
+          showGenre={false}
+        />
+      </ResourceCategorySection>
+    )}
+  </div>
+</div>

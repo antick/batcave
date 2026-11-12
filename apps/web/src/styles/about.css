@@ -1,0 +1,236 @@
+/* About page layout. Personal narrative content lives in src/lib/about.ts. */
+
+.about-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.about-hero-panel,
+.about-section {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.about-hero-panel {
+  padding: 22px;
+}
+
+.about-hero-panel p.about-intro-p {
+  max-width: var(--page-content-max-width);
+  margin: 6px 0 16px;
+  color: var(--text-color);
+  line-height: var(--font-line-height-body);
+  opacity: 0.76;
+  transition: color 0.5s ease;
+}
+
+p.about-story-p,
+.about-mini-card p {
+  margin: 0;
+  color: var(--text-color);
+  transition: color 0.5s ease;
+}
+
+p.about-story-p {
+  max-width: var(--page-content-max-width);
+  margin: 12px 0 0;
+  line-height: var(--font-line-height-body);
+  opacity: 0.7;
+}
+
+.about-section {
+  padding: 20px;
+}
+
+.about-section-heading {
+  margin-bottom: 14px;
+}
+
+.about-section h3,
+.about-mini-card h4 {
+  margin: 0;
+  color: var(--text-color);
+  transition: color 0.5s ease;
+}
+
+.about-section h3 {
+  margin-top: 5px;
+}
+
+.about-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.about-mini-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.about-mini-card {
+  padding: 14px;
+}
+
+.about-mini-card p {
+  margin-top: 8px;
+  line-height: var(--font-line-height-body);
+  opacity: 0.68;
+}
+
+.about-tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.about-social-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+html[data-theme^="light"] .about-hero-panel,
+html[data-theme^="light"] .about-section,
+html[data-theme^="light"] .about-mini-card,
+html[data-theme^="light"] .about-setup-card {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.about-setup-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.about-setup-card {
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.about-setup-card h4 {
+  margin: 0 0 16px 0;
+  color: var(--text-color);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Favorite Stack */
+.about-stack-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+
+.about-stack-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.about-stack-label {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.44;
+  font-weight: 600;
+}
+
+.about-stack-value {
+  font-weight: 500;
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+/* Tools & Apps */
+.about-tools-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.about-tools-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about-tools-label {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.46;
+}
+
+.about-tools-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.about-tool-chip {
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  color: var(--text-color);
+  opacity: 0.74;
+}
+
+html[data-theme^="light"] .about-tool-chip {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+.about-project-link {
+  color: var(--text-color);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.25);
+  transition:
+    border-bottom-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.about-project-link:hover {
+  border-bottom-color: var(--text-color);
+  opacity: 0.9;
+}
+
+html[data-theme^="light"] .about-project-link {
+  border-bottom-color: rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 768px) {
+  .about-card-grid,
+  .about-setup-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-stack-list {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.about-bullet-list {
+  list-style: disc;
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about-bullet-list li {
+  line-height: var(--font-line-height-body);
+  color: var(--text-color);
+  opacity: 0.72;
+}

@@ -1,0 +1,117 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.6/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": [
+      "**/*.js",
+      "**/*.mjs",
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.astro",
+      "**/*.css",
+      "**/*.json",
+      "**/*.jsonc",
+      "!!.sc",
+      "!!**/.astro",
+      "!!**/.turbo",
+      "!!**/dist",
+      "!!node_modules"
+    ],
+    "ignoreUnknown": true
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "complexity": {
+        "noImportantStyles": "off"
+      },
+      "style": {
+        "noDescendingSpecificity": "off"
+      },
+      "a11y": {
+        "useSemanticElements": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "all"
+    }
+  },
+  "html": {
+    "experimentalFullSupportEnabled": true,
+    "formatter": {
+      "enabled": true,
+      "selfCloseVoidElements": "always"
+    }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "apps/web/src/pages/404.astro",
+        "apps/web/src/pages/search.astro"
+      ],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off",
+            "useJsxKeyInIterable": "off"
+          },
+          "style": {
+            "useConst": "off",
+            "useImportType": "off"
+          },
+          "a11y": {
+            "noAutofocus": "off",
+            "useAnchorContent": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off",
+            "useJsxKeyInIterable": "off"
+          },
+          "style": {
+            "useConst": "off",
+            "useImportType": "off"
+          },
+          "a11y": {
+            "useAnchorContent": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/src/components/GitHubActivityHeatmap.tsx"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noArrayIndexKey": "off"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+---
+import { getExternalLinkProps } from '../lib/utils';
+
+interface Props {
+  id: string;
+  label: string;
+  action?: {
+    href: string;
+    label: string;
+    external?: boolean;
+  };
+}
+
+const { id, label, action } = Astro.props;
+const externalProps = getExternalLinkProps(action?.external);
+---
+
+<div class="home-section-header">
+  <h2 id={id} class="identity-block-label">{label}</h2>
+  <div class="identity-block-divider"></div>
+  {action && (
+    <a href={action.href} class="identity-inline-link" {...externalProps}>
+      {action.label}
+      <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+    </a>
+  )}
+</div>

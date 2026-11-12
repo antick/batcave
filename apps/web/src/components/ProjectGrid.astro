@@ -1,0 +1,28 @@
+---
+import ResourceCard from './ResourceCard.astro';
+import {
+  getProjectPath,
+  getProjectStatusTone,
+  type Project,
+} from '../lib/projects';
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+---
+
+<div class="resource-grid">
+  {projects.map((project) => (
+    <ResourceCard
+      title={project.title}
+      description={project.description}
+      href={getProjectPath(project)}
+      imageVariants={project.image}
+      meta={project.status}
+      metaTone={getProjectStatusTone(project.status)}
+      tags={project.tags}
+    />
+  ))}
+</div>

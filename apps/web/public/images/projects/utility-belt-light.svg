@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Utility Belt project artwork</title>
+  <desc id="desc">A distinct geometric illustration representing fictional project.</desc>
+  <defs>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#d946ef"/>
+      <stop offset="1" stop-color="#d946ef" stop-opacity=".38"/>
+    </linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0v48" fill="none" stroke="#dbe3ef" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="675" rx="36" fill="#f8fafc"/>
+  <rect x="24" y="24" width="1152" height="627" rx="28" fill="#ffffff" stroke="#dbe3ef" stroke-width="2"/>
+  <rect x="24" y="24" width="1152" height="627" rx="28" fill="url(#grid)" opacity=".42"/>
+  <circle cx="600" cy="340" r="235" fill="#d946ef" opacity=".08"/>
+  <g fill="url(#accent)" stroke="#d946ef" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"><path d="m470 440 130-230 130 230Z" fill="none"/><path d="M535 325h130" fill="none"/></g>
+  <text x="72" y="92" fill="#d946ef" font-family="ui-monospace, monospace" font-size="22" font-weight="700" letter-spacing="4">FICTIONAL PROJECT</text>
+  <text x="72" y="600" fill="#172033" font-family="ui-sans-serif, sans-serif" font-size="58" font-weight="800">Utility Belt</text>
+  <text x="1128" y="600" fill="#64748b" font-family="ui-monospace, monospace" font-size="18" text-anchor="end">BATCAVE / DEMO</text>
+</svg>

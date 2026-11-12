@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import TagIndex from '../components/TagIndex.astro';
+import { SITE_NAME } from '../lib/constants';
+import { filterVisibleContent } from '../lib/content';
+import { getVisiblePostTags, TAGS_PAGE_COPY } from '../lib/tags';
+
+const tags = getVisiblePostTags(
+  filterVisibleContent(await getCollection('blog')),
+);
+---
+
+<Layout
+  title={`${TAGS_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={TAGS_PAGE_COPY.subtitle}
+>
+  <ResourcePage title={TAGS_PAGE_COPY.title} subtitle={TAGS_PAGE_COPY.subtitle}>
+    <TagIndex tags={tags} />
+  </ResourcePage>
+</Layout>

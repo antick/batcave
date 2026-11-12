@@ -1,0 +1,40 @@
+---
+import {
+  getMusicTrackThumbnail,
+  getMusicTrackUrl,
+  MUSIC_PAGE_COPY,
+  type MusicTrack,
+} from '../lib/music';
+
+interface Props {
+  track: MusicTrack;
+}
+
+const { track } = Astro.props;
+---
+
+<a
+  id={track.id}
+  href={getMusicTrackUrl(track)}
+  class="music-card"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <img
+    class="music-card-thumb"
+    src={getMusicTrackThumbnail(track)}
+    alt=""
+    width="160"
+    height="90"
+    loading="lazy"
+    decoding="async"
+  />
+  <div class="music-card-copy">
+    <h3>{track.title}</h3>
+    {track.note && <p>{track.note}</p>}
+    <span class="music-card-source">
+      {MUSIC_PAGE_COPY.openLabel}
+      <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+    </span>
+  </div>
+</a>

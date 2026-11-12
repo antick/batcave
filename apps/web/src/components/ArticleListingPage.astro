@@ -1,0 +1,65 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Pagination from './Pagination.astro';
+import PostGrid from './PostGrid.astro';
+import SiteFooter from './SiteFooter.astro';
+import SiteNav from './SiteNav';
+import { BLOG_INDEX_PATH } from '../lib/articleRoutes';
+import { BLOG_PAGE_COPY } from '../lib/constants';
+import { getDynamicNavItems } from '../lib/navHelper';
+import type { PaginationResult } from '../lib/pagination';
+
+interface Props {
+  title: string;
+  description: string;
+  page: PaginationResult<CollectionEntry<'blog'>>;
+  basePath: string;
+  paginationLabel: string;
+  backHref?: string;
+  backLabel?: string;
+}
+
+const {
+  title,
+  description,
+  page,
+  basePath,
+  paginationLabel,
+  backHref = BLOG_INDEX_PATH,
+  backLabel = BLOG_PAGE_COPY.title,
+} = Astro.props;
+const siteNavItems = await getDynamicNavItems();
+---
+
+<div class="deck-scene">
+  <SiteNav client:load activePage="blog" siteNavItems={siteNavItems} />
+
+  <main class="deck-wrapper">
+    <div class="page-card-stack">
+      <div class="page-card">
+        <div class="card-content blog-listing-card">
+          <nav class="resource-breadcrumb" aria-label="Breadcrumb">
+            <a href={backHref} class="breadcrumb-back">
+              <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+              <span>Back to {backLabel}</span>
+            </a>
+          </nav>
+          <div class="card-heading">
+            <h1 class="card-heading-title">{title}</h1>
+            <div class="card-accent-line"></div>
+          </div>
+          <p class="card-subtitle">{description}</p>
+
+          <PostGrid posts={page.items} />
+          <Pagination
+            basePath={basePath}
+            currentPage={page.currentPage}
+            totalPages={page.totalPages}
+            label={paginationLabel}
+          />
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<SiteFooter />

@@ -1,0 +1,3 @@
+[install]
+# Require two full days before resolving a newly published release.
+minimumReleaseAge = 172800

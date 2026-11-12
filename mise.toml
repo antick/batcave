@@ -1,0 +1,59 @@
+[tools]
+# Keep this aligned with package.json's packageManager field.
+bun = "1.4.4"
+
+[tasks.install]
+description = "Install workspace dependencies from the lockfile"
+run = "bun install --frozen-lockfile"
+
+[tasks.dev]
+description = "Start the Astro development server"
+run = "bun run dev"
+
+[tasks.build]
+description = "Build the static site"
+run = "bun run build"
+
+[tasks.preview]
+description = "Preview the production build"
+run = "bun run preview"
+
+[tasks.quality]
+description = "Run all formatting, lint, type, test, build, and rendered checks"
+run = "bun run quality"
+
+[tasks.check]
+description = "Check Astro and TypeScript"
+run = "bun run check"
+
+[tasks.test]
+description = "Run the Bun tests"
+run = "bun run test"
+
+[tasks.format]
+description = "Format source files"
+run = "bun run format"
+
+[tasks."format:check"]
+description = "Check source formatting"
+run = "bun run format:check"
+
+[tasks.lint]
+description = "Lint source files"
+run = "bun run lint"
+
+[tasks."lint:fix"]
+description = "Apply automatic lint fixes"
+run = "bun run lint:fix"
+
+[tasks."validate:source"]
+description = "Validate repository source integrity"
+run = "bun run validate:source"
+
+[tasks.validate]
+description = "Validate built accessibility and links"
+run = "bun run validate"
+
+[tasks."artwork:projects"]
+description = "Regenerate project artwork"
+run = "bun run artwork:projects"

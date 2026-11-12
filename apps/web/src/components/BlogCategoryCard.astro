@@ -1,0 +1,22 @@
+---
+import { getBlogCategoryPath } from '../lib/articleRoutes';
+import { BLOG_CATEGORY_FALLBACK_ICON } from '../lib/constants';
+import type { ContentCategory } from '../lib/types';
+import HubCard from './HubCard.astro';
+
+interface Props {
+  category: ContentCategory;
+  count: number;
+}
+
+const { category, count } = Astro.props;
+const postLabel = count === 1 ? 'post' : 'posts';
+---
+
+<HubCard
+  href={getBlogCategoryPath(category)}
+  title={category.label}
+  description={category.description}
+  icon={category.icon ?? BLOG_CATEGORY_FALLBACK_ICON}
+  countLabel={`${count} ${postLabel}`}
+/>

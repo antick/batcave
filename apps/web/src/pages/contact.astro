@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ContactDirectory from '../components/ContactDirectory.astro';
+import ResourcePage from '../components/ResourcePage.astro';
+import {
+  CONTACT_GROUPS,
+  CONTACT_CV_REQUEST,
+  CONTACT_PAGE_COPY,
+  CONTACT_PREFERRED_PROFILES,
+  CONTACT_PROFILE_COUNT,
+} from '../lib/contact';
+import { AUTHOR, SITE_NAME } from '../lib/constants';
+---
+
+<Layout
+  title={`Contact ${AUTHOR.name} - ${SITE_NAME}`}
+  description={CONTACT_PAGE_COPY.intro}
+>
+  <ResourcePage
+    activePage="contact"
+    title={CONTACT_PAGE_COPY.title}
+    subtitle={CONTACT_PAGE_COPY.subtitle}
+    intro={CONTACT_PAGE_COPY.intro}
+  >
+    <section class="contact-priority" aria-labelledby="contact-priority-title">
+      <span class="contact-priority-icon" aria-hidden="true">
+        <i class="fa-solid fa-paper-plane"></i>
+      </span>
+      <div class="contact-priority-copy">
+        <span class="resource-meta">Preferred contact</span>
+        <h3 id="contact-priority-title">{CONTACT_PAGE_COPY.preferredTitle}</h3>
+        <p>{CONTACT_PAGE_COPY.preferredDescription}</p>
+      </div>
+      <div class="contact-priority-actions">
+        {CONTACT_PREFERRED_PROFILES.map((profile) => (
+          <a href={profile.url} target="_blank" rel="noopener noreferrer">
+            <i class={profile.icon} aria-hidden="true" />
+            Message on {profile.title}
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <aside class="contact-cv-note" aria-labelledby="contact-cv-title">
+      <div>
+        <span class="resource-meta">Private by default</span>
+        <h3 id="contact-cv-title">{CONTACT_CV_REQUEST.title}</h3>
+        <p>{CONTACT_CV_REQUEST.description}</p>
+      </div>
+      <a
+        href={CONTACT_CV_REQUEST.url}
+        class="resource-action-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+        Request via LinkedIn
+      </a>
+    </aside>
+
+    <p class="contact-directory-count">
+      <strong>{CONTACT_PROFILE_COUNT}</strong>
+      profile destinations across {CONTACT_GROUPS.length} groups
+    </p>
+
+    <ContactDirectory groups={CONTACT_GROUPS} />
+  </ResourcePage>
+</Layout>

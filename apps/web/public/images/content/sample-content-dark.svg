@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Batcomputer notebook study</title>
+  <desc id="desc">An abstract Gotham workshop study with geometric shapes and a detective’s notebook.</desc>
+  <rect width="1200" height="630" rx="32" fill="#1c1b20"/>
+  <circle cx="350" cy="300" r="150" fill="#ef5350" opacity=".18"/>
+  <rect x="590" y="180" width="260" height="280" rx="20" fill="none" stroke="#f6f1e4" stroke-width="8"/>
+  <path d="M640 250h160M640 310h160M640 370h100" stroke="#ef5350" stroke-width="12" stroke-linecap="round"/>
+  <path d="m250 450 110-240 110 240Z" fill="none" stroke="#ef5350" stroke-width="8"/>
+</svg>

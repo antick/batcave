@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import BlogCategoryCard from '../../components/BlogCategoryCard.astro';
+import ResourcePage from '../../components/ResourcePage.astro';
+import { BLOG_PAGE_COPY, SITE_NAME } from '../../lib/constants';
+import { filterVisibleContent, sortContentByPriority } from '../../lib/content';
+import { getBlogCategorySummaries } from '../../lib/blog';
+import { getActiveBlogCategories } from '../../lib/navHelper';
+
+const posts = sortContentByPriority(
+  filterVisibleContent(await getCollection('blog')),
+);
+const categories = await getActiveBlogCategories();
+const summaries = getBlogCategorySummaries(posts, categories);
+---
+
+<Layout
+  title={`${BLOG_PAGE_COPY.title} - ${SITE_NAME}`}
+  description={BLOG_PAGE_COPY.subtitle}
+>
+  <ResourcePage
+    activePage="blog"
+    title={BLOG_PAGE_COPY.title}
+    subtitle={BLOG_PAGE_COPY.subtitle}
+  >
+    <div class="hub-grid">
+      {summaries.map((summary) => (
+        <BlogCategoryCard category={summary.category} count={summary.count} />
+      ))}
+    </div>
+  </ResourcePage>
+</Layout>

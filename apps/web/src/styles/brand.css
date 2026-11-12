@@ -1,0 +1,48 @@
+.site-logo-link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding-bottom: 0;
+  border-bottom: 0;
+  opacity: 0.82;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.site-logo {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.site-logo-light {
+  display: none;
+}
+
+html[data-theme^="light"] .site-logo-dark {
+  display: none;
+}
+
+html[data-theme^="light"] .site-logo-light {
+  display: block;
+}
+
+.site-logo-link:hover,
+.site-logo-link:focus-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.site-logo-link::after {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .site-logo-link {
+    order: -1;
+  }
+}

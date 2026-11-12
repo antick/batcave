@@ -1,0 +1,12 @@
+dist/
+node_modules/
+.turbo/
+.astro/
+.env
+.env.*
+.vercel
+!.env.example
+.DS_Store
+.playwright-mcp/
+.sc/
+.thinkrail/
